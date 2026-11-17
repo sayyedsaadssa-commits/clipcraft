@@ -419,7 +419,7 @@ def healthz():
 def brand(name: str):
     if not re.fullmatch(r"[\w\-]+\.(svg|png|ico|webp|jpg|mp4)", name) or not (WEB / "brand" / name).is_file():
         raise HTTPException(404)
-    return FileResponse(WEB / "brand" / name, headers={"Cache-Control": "public, max-age=604800, stale-while-revalidate=86400"})
+    return FileResponse(WEB / "brand" / name, headers={"Cache-Control": "no-cache, must-revalidate"})
 
 
 @app.get("/assets/{name}")

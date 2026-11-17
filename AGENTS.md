@@ -62,3 +62,8 @@ are there, and only then offer to delete the old folder. Never delete anything w
 - **Pages** are plain HTML, CSS and JavaScript. Keep the existing palette, no shadows, and hover states that
   change colour only.
 - Comments and messages are written in plain language for people who do not program. Keep that tone.
+
+## Low-Token & Performance Guidelines
+- **Zero raw dumps**: Never print raw multi-hundred line logs, full video transcripts, or huge JSON into the chat context.
+- **Concise answers**: Give direct, actionable responses without conversational filler.
+- **Local processing**: Use local scripts on the RTX 4050 GPU for data parsing, cutting, and audio processing instead of LLM token processing.

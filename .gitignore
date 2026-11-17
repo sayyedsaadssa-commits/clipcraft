@@ -9,6 +9,8 @@ secrets/
 *client_secret*.json
 data/
 storage.json
+ai.json
+*.json.backup
 *.db
 *.db-wal
 *.db-shm

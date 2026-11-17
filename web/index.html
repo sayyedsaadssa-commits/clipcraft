@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PeakCut</title>
+<title>ClipCraft · AI Video Studio</title>
 <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@300&family=Archivo+Black&family=Anton&family=Poppins:wght@800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#FF8B33;--brand-press:#F27A1F;--brand-ink:#2A1A12;--brand-soft:#FFF2E8;--brand-line:#FFD9BC;--brand-deep:#A9480A;
-  --frame:#1E1612;--frame-2:#2C221D;--frame-line:rgba(255,255,255,.08);--frame-text:#F4EEEA;--frame-dim:#A99A91;
-  --bg:#FFFFFF;--muted:#F7F4F1;--line:#EEE8E4;--line-2:#E1D9D3;
-  --text:#211813;--dim:#6D6159;--faint:#A0948C;
-  --good:#0F8A57;--good-soft:#E6F6EE;--bad:#D3343F;--bad-soft:#FDECEE;--live:#E5323F;
+  --brand:#00E5FF;--brand-press:#00B4D8;--brand-ink:#030B10;--brand-soft:rgba(0,229,255,0.12);--brand-line:rgba(0,229,255,0.3);--brand-deep:#00E5FF;
+  --frame:#070A0F;--frame-2:#0E141F;--frame-line:rgba(255,255,255,0.08);--frame-text:#F0F6FC;--frame-dim:#7D8E9E;
+  --bg:#0A0E15;--muted:#111823;--line:rgba(255,255,255,0.08);--line-2:rgba(255,255,255,0.14);
+  --text:#F3F7FA;--dim:#8C9EAE;--faint:#556677;
+  --good:#00E676;--good-soft:rgba(0,230,118,0.14);--bad:#FF3D57;--bad-soft:rgba(255,61,87,0.14);--live:#FF1744;
   --r-lg:16px;--r:12px;--r-sm:8px;
-  color-scheme:light;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -31,9 +31,9 @@ svg{width:18px;height:18px;flex:none;fill:currentColor}
 
 /* ---------- frame */
 .app{display:grid;grid-template-columns:240px minmax(0,1fr);height:100vh}
-.side{background:var(--frame);color:var(--frame-text);display:flex;flex-direction:column;height:100vh;padding:14px 10px 12px;min-width:0}
+.side{background:var(--frame);color:var(--frame-text);display:flex;flex-direction:column;height:100vh;padding:14px 10px 12px;min-width:0;border-right:1px solid var(--frame-line)}
 .side-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 4px 22px 6px}
-.side-head .logo{height:36px;width:auto;display:block}
+.side-head .logo{height:38px;width:auto;display:block;filter:drop-shadow(0 0 8px rgba(0,229,255,0.3))}
 .side-head .mark{display:none;width:34px;height:34px}
 .icon-btn{width:36px;height:36px;display:grid;place-items:center;border-radius:var(--r);border:0;background:transparent;color:var(--dim);cursor:pointer;flex:none}
 .side .icon-btn{color:var(--frame-dim)}
@@ -41,16 +41,17 @@ svg{width:18px;height:18px;flex:none;fill:currentColor}
 .nav{display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1;min-height:0;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
 .nav h4{font-size:12px;font-weight:500;color:var(--frame-dim);padding:14px 10px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;width:100%;min-height:34px;padding:0 10px;border-radius:7px;border:0;background:transparent;color:var(--frame-text);font-size:14px;font-weight:500;cursor:pointer;text-align:left}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;min-height:34px;padding:0 10px;border-radius:8px;border:0;background:transparent;color:var(--frame-text);font-size:14px;font-weight:500;cursor:pointer;text-align:left;transition:all .15s ease}
+.nav-item:hover{background:rgba(255,255,255,0.04)}
 .nav-item svg{width:17px;height:17px}
 .nav-item svg{color:var(--frame-dim)}
 .nav-item:active{background:var(--frame-2)}
-.nav-item.on{background:var(--brand);color:var(--brand-ink);font-weight:600}
+.nav-item.on{background:var(--brand);color:var(--brand-ink);font-weight:700;box-shadow:0 0 16px rgba(0,229,255,0.28)}
 .nav-item.on svg{color:var(--brand-ink)}
 .label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .count{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.1);color:var(--frame-text);white-space:nowrap}
-.nav-item.on .count{background:rgba(42,26,18,.14);color:var(--brand-ink)}
-.avatar{width:26px;height:26px;border-radius:50%;background:rgba(255,139,51,.18);color:#FFB27A;display:grid;place-items:center;font-size:11px;font-weight:700;flex:none;overflow:hidden}
+.nav-item.on .count{background:rgba(4,16,23,.2);color:var(--brand-ink)}
+.avatar{width:26px;height:26px;border-radius:50%;background:rgba(0,229,255,.18);color:#00E5FF;display:grid;place-items:center;font-size:11px;font-weight:700;flex:none;overflow:hidden}
 img.avatar{object-fit:cover;background:rgba(255,255,255,.08)}
 .tav{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--muted)}
 #title{display:flex;align-items:center;gap:10px}
@@ -184,6 +185,7 @@ main{background:var(--bg);margin:8px 8px 8px 0;border-radius:var(--r-lg);height:
 .app.mini{grid-template-columns:76px minmax(0,1fr)}
 .app.mini .side-head{flex-direction:column;padding:2px 0 18px}
 .app.mini .side-head .logo{display:none}.app.mini .side-head .mark{display:block}
+.app.mini .side-head .brand-text{display:none}
 .app.mini .label,.app.mini .count,.app.mini .nav h4,.app.mini .side-card,.app.mini .plans-btn{display:none}
 .app.mini .nav-item{justify-content:center;padding:0}
 .app.mini .nav-item .live-dot{position:absolute;margin:-20px -22px 0 0}
@@ -265,23 +267,23 @@ label.ck input{accent-color:var(--brand);margin:0}
   -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 14%,black 70%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,black 14%,black 70%,transparent 100%)}
 .hero>:not(.ga-bg){position:relative;z-index:2}
 #view{position:relative;z-index:1}
-.hero h2{font-size:clamp(21px,5.2vw,28px);font-weight:700;letter-spacing:-.03em;color:var(--brand-ink);line-height:1.2;text-wrap:balance}
-.hero>p{color:var(--dim);margin:8px auto 22px;max-width:520px;font-size:15px}
-.composer{max-width:760px;margin:0 auto;background:#fff;border:1px solid var(--line-2);border-radius:var(--r-lg);text-align:left;transition:background-color .15s ease,border-color .15s ease}
-.composer:has(#url:focus){border-color:#FFB27A}
-.composer.compact{max-width:none;margin-bottom:28px;background:var(--muted)}
-.composer.over{background:var(--brand-soft);border-color:var(--brand)}
+.hero h2{font-size:clamp(22px,5.2vw,32px);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.2;text-wrap:balance}
+.hero>p{color:var(--dim);margin:10px auto 26px;max-width:540px;font-size:15px;line-height:1.6}
+.composer{max-width:760px;margin:0 auto;background:rgba(17,24,35,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,229,255,0.22);border-radius:var(--r-lg);text-align:left;box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 24px rgba(0,229,255,0.06);transition:all .2s ease}
+.composer:has(#url:focus),.composer:focus-within{border-color:var(--brand);box-shadow:0 14px 48px rgba(0,0,0,0.65),0 0 35px rgba(0,229,255,0.2)}
+.composer.compact{max-width:none;margin-bottom:28px;background:var(--muted);border-color:var(--line)}
+.composer.over{background:rgba(0,229,255,0.1);border-color:var(--brand)}
 .composer :focus-visible{outline:none}
 .composer-input{position:relative;display:flex;align-items:center}
 .composer-input>svg{position:absolute;left:18px;color:var(--faint);width:20px;height:20px;transition:color .15s ease}
 .composer-input:focus-within>svg{color:var(--brand)}
-.composer-input input,.composer-input input:focus{height:60px;border:0;background:transparent;padding:0 18px 0 48px;font-size:16px;border-radius:var(--r-lg) var(--r-lg) 0 0}
-.composer-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:2px 10px 10px 12px}
-.chip{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:999px;border:0;background:var(--muted);color:var(--dim);font-weight:500;font-size:13px;cursor:pointer;white-space:nowrap;transition:background-color .15s ease,color .15s ease}
-.composer.compact .chip{background:#fff}
+.composer-input input,.composer-input input:focus{height:60px;border:0;background:transparent;padding:0 18px 0 48px;font-size:16px;color:#fff;border-radius:var(--r-lg) var(--r-lg) 0 0}
+.composer-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:4px 12px 12px 14px;border-top:1px solid rgba(255,255,255,0.04)}
+.chip{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.04);color:var(--dim);font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;transition:all .15s ease}
+.composer.compact .chip{background:rgba(255,255,255,0.06)}
 .chip svg{width:16px;height:16px}
-.chip:hover,.chip:focus-visible{background:#EDE3DB;color:var(--text)}
-.chip.on,.pick.open .chip{background:var(--brand-soft);color:var(--brand-ink)}
+.chip:hover,.chip:focus-visible{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)}
+.chip.on,.pick.open .chip{background:rgba(0,229,255,0.15);color:var(--brand);border-color:rgba(0,229,255,0.35)}
 .hint{font-size:12px;color:var(--faint);margin-right:6px}
 .composer-bar{flex-wrap:nowrap}
 .composer-bar .grow{display:none}
@@ -709,28 +711,28 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ---------- motion and hover: colour only, never size */
-.btn,.nav-item,.chip,.step,.tabbtn,.icon-btn,label.ck,.clip,a.lnk,.ai-card,.veil span,td,label.sw input{transition:background-color .15s ease,border-color .15s ease,color .15s ease}
-.btn:hover{background:var(--muted);border-color:#D4CAC3}
-.btn.primary:hover{background:#FF9A4C;border-color:#FF9A4C}
-.btn.dark:hover{background:#3A2C25;border-color:#3A2C25}
-.btn.danger:hover{background:#FADDE0}
-.btn.ghost:hover{background:var(--muted);border-color:transparent;color:var(--text)}
+.btn,.nav-item,.chip,.step,.tabbtn,.icon-btn,label.ck,.clip,a.lnk,.ai-card,.veil span,td,label.sw input{transition:all .18s cubic-bezier(0.16,1,0.3,1)}
+.btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18)}
+.btn.primary:hover{background:#33F4FF;border-color:#33F4FF;box-shadow:0 0 24px rgba(0,229,255,0.45);transform:translateY(-1px)}
+.btn.dark:hover{background:#1B2635;border-color:rgba(0,229,255,0.3)}
+.btn.danger:hover{background:rgba(255,61,87,0.2)}
+.btn.ghost:hover{background:rgba(255,255,255,0.06);border-color:transparent;color:var(--text)}
 
 .nav-item:hover{background:var(--frame-2)}
-.nav-item.on:hover{background:#FF9A4C}
-.icon-btn:hover{background:var(--muted);color:var(--text)}
+.nav-item.on:hover{background:#00F0FF;box-shadow:0 0 20px rgba(0,229,255,0.35)}
+.icon-btn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
 .side .icon-btn:hover{background:var(--frame-2);color:var(--frame-text)}
-.chip:hover{background:var(--muted);color:var(--text)}
-.chip.on:hover,.pick.open .chip:hover{background:#FFE2CC;color:var(--brand-ink)}
-.step:hover{background:#F1EBE6}
-.tabbtn:hover{color:var(--brand-ink);background:var(--muted)}
-label.ck:hover{border-color:#D4CAC3}
-.clip:hover{border-color:var(--line-2)}
-.shot:hover .veil span{background:#FF9A4C}
-a.lnk:hover{color:var(--brand-deep)}
-tr:hover>td{background:#FCFAF8}
-.ai-card:hover{background:#352a24}
-.ai-card.on{border-color:rgba(255,139,51,.5)}
+.chip:hover{background:rgba(255,255,255,0.08);color:var(--text)}
+.chip.on:hover,.pick.open .chip:hover{background:rgba(0,229,255,0.18);color:var(--brand)}
+.step:hover{background:rgba(255,255,255,0.04);border-color:rgba(0,229,255,0.3)}
+.tabbtn:hover{color:#fff;background:rgba(255,255,255,0.04)}
+label.ck:hover{border-color:rgba(0,229,255,0.3)}
+.clip:hover{border-color:rgba(0,229,255,0.35);transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,0.4)}
+.shot:hover .veil span{background:#00F0FF;box-shadow:0 0 16px rgba(0,229,255,0.5)}
+a.lnk:hover{color:#00E5FF}
+tr:hover>td{background:rgba(255,255,255,0.02)}
+.ai-card:hover{background:var(--frame-2);border-color:rgba(0,229,255,0.25)}
+.ai-card.on{border-color:rgba(0,229,255,0.5)}
 .app.mini .ai-card:hover{background:var(--frame-2)}
 dialog[open]{animation:fadein .16s ease}
 @keyframes fadein{from{opacity:0}}
@@ -817,8 +819,21 @@ dialog[open]{animation:fadein .16s ease}
 <body>
 <div class="app" id="app">
   <aside class="side" aria-label="Sidebar">
-    <div class="side-head"><img class="logo" src="/brand/logo-light.svg" alt="PeakCut"><img class="mark" src="/brand/favicon.svg" alt="PeakCut">
-      <button class="icon-btn collapse" data-act="collapse" id="collapseBtn" aria-label="Collapse sidebar"></button></div>
+    <div class="side-head">
+      <div class="logo-wrap" style="display:flex;align-items:center;gap:11px;text-decoration:none;cursor:pointer;" onclick="go('overview')">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style="flex:none;filter:drop-shadow(0 0 8px rgba(0,229,255,0.45));">
+          <rect width="34" height="34" rx="9" fill="#0C141E" stroke="#00E5FF" stroke-width="1.5" stroke-opacity="0.6"/>
+          <path d="M15 10 C10 10 7 13.5 7 17 C7 20.5 10 24 15 24 C17.5 24 19.5 22.8 20.5 21.5 L17.8 19.2 C17.2 19.8 16.2 20.4 15 20.4 C12 20.4 10.5 18.5 10.5 17 C10.5 15.5 12 13.6 15 13.6 C16.2 13.6 17.2 14.2 17.8 14.8 L20.5 12.5 C19.5 11.2 17.5 10 15 10 Z" fill="#00E5FF"/>
+          <path d="M18 13 L26 17 L18 21 Z" fill="#FFFFFF"/>
+          <path d="M20 15 L24 17 L20 19 Z" fill="#00E5FF"/>
+        </svg>
+        <div class="brand-text" style="display:flex;flex-direction:column;line-height:1.15;">
+          <span style="font-family:'Geist','Poppins',system-ui,sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#F0F6FC;">Clip<span style="color:#00E5FF;text-shadow:0 0 10px rgba(0,229,255,0.4);">Craft</span></span>
+          <span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#00E5FF;opacity:0.75;text-transform:uppercase;">AI Studio</span>
+        </div>
+      </div>
+      <button class="icon-btn collapse" data-act="collapse" id="collapseBtn" aria-label="Collapse sidebar"></button>
+    </div>
     <nav class="nav" id="nav" aria-label="Main"></nav>
     <div class="side-foot" id="foot"></div>
   </aside>
@@ -938,15 +953,15 @@ function startTour() {
   if (S.view !== "overview") go("overview");
   // sel: what the step points at.  side: it lives in the sidebar (opened for the step on phones).  dock: where the card sits on phones.
   const steps = [
-    {t: "Welcome to PeakCut", x: "Long videos and live streams go in, captioned vertical clips come out. Here is a quick look around.",
+    {t: "Welcome to ClipCraft", x: "Long videos and live streams go in, captioned vertical clips come out. Here is a quick look around.",
      chips: [["link", "Paste a link"], ["scissors", "Get clips", 1], ["radio", "Live streams"], ["send", "Post them"]]},
-    {t: "Start with any video", x: "Paste a YouTube, Twitch or Kick link here, or upload a file. PeakCut finds the best moments and makes each one a short with captions.",
+    {t: "Start with any video", x: "Paste a YouTube, Twitch or Kick link here, or upload a file. ClipCraft finds the best moments and makes each one a short with captions.",
      sel: "#addform", dock: "bottom", chips: [["link", "YouTube"], ["link", "Twitch"], ["link", "Kick"], ["up", "Upload", 1]]},
     {t: "Your day at a glance", x: "Home shows what is recording, how many clips were made and posted today, and what is waiting to go out.",
      sel: "#ov .tiles", dock: "bottom", chips: [["radio", "Recording"], ["scissors", "Clips today", 1], ["send", "Posted"], ["clock", "Waiting"]]},
     {t: "Every video in one place", x: "All videos lists everything you have processed. Open a video to see its clips, trim them, change the captions or download them.",
      sel: '#nav [data-v="library"]', side: 1, dock: "bottom", chips: [["film", "All videos", 1], ["play", "Preview"], ["sliders", "Edit"], ["down", "Download"]]},
-    {t: "Add the creators you clip", x: "Give each creator a workspace with their channels. PeakCut can record them when they go live and clip the highlights as they happen.",
+    {t: "Add the creators you clip", x: "Give each creator a workspace with their channels. ClipCraft can record them when they go live and clip the highlights as they happen.",
      sel: '#nav [data-act="newcreator"]', side: 1, dock: "bottom", chips: [["plusc", "New creator", 1], ["radio", "Record live"], ["bolt", "Clip highlights"]]},
     {t: "The AI picks the moments", x: "This shows which AI this server uses and how much it has worked today. Open it to see what the AI was used for.",
      sel: "#foot .ai-card", side: 1, dock: "top", chips: [["bolt", "AI", 1], ["chart", "See usage"]]},
@@ -1102,7 +1117,7 @@ function drawStream() {
     pl.dataset.src = src;
     const ipHost = /^[\d.]+$|^\[/.test(location.hostname);
     pl.innerHTML = k === "twitch" && ipHost
-      ? `<div class="noembed">${platLogo(k)}<b>Twitch only plays inside sites with a web address</b><span>It will play here once PeakCut is on its domain, or open PeakCut at localhost instead of ${esc(location.hostname)}.</span><a class="btn sm" href="${esc(p.channel)}" target="_blank" rel="noopener">Watch on Twitch ${ic("upright")}</a></div>`
+      ? `<div class="noembed">${platLogo(k)}<b>Twitch only plays inside sites with a web address</b><span>It will play here once ClipCraft is on its domain, or open ClipCraft at localhost instead of ${esc(location.hostname)}.</span><a class="btn sm" href="${esc(p.channel)}" target="_blank" rel="noopener">Watch on Twitch ${ic("upright")}</a></div>`
       : src ? `<iframe src="${src}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${PLAT[k].name} live stream"></iframe>` : "";
   }
   const stats = [p.viewers != null ? [fmtK(p.viewers), "watching"] : null, p.started ? [since(p.started), "live for"] : null,
@@ -1114,7 +1129,7 @@ function drawStream() {
     ${stats.length ? `<div class="sstats">${stats.map(([v, l]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>` : ""}
     <div class="cta">${rec
       ? `<button class="btn danger" data-act="stoplive" data-j="${esc(rec)}">${ic("stop")}Stop recording</button><small>Recording now. Clips appear below as they're made.</small>`
-      : `<button class="btn primary" data-act="golive" data-url="${esc(p.channel)}"><span class="rdot"></span>Record this stream</button><small>PeakCut watches it and clips the best moments as they happen.</small>`}</div>`);
+      : `<button class="btn primary" data-act="golive" data-url="${esc(p.channel)}"><span class="rdot"></span>Record this stream</button><small>ClipCraft watches it and clips the best moments as they happen.</small>`}</div>`);
 }
 function liveOn(c) { return Object.entries(c.profiles || {}).filter(([k, p]) => p.live && c.channels?.[k] === p.channel).sort(([, p]) => p.channel === c.channel ? -1 : 1); }
 function statusBadge(c) {
@@ -1221,15 +1236,15 @@ async function openFeedback(kind = "bug", context = "") {
 }
 function updateHow() {
   const up = S.status?.update, d = $("#formdlg"); if (!up || d.open) return;
-  const ai = "Update this PeakCut folder to the latest version from GitHub (git pull), keep my .env and data folder as they are, install any new requirements, and restart PeakCut. Read AGENTS.md first: if this folder's path is long or inside a temporary or assistant workspace, ask me before moving it to a short folder like C:\\peakcut, and never delete anything without asking.";
+  const ai = "Update this ClipCraft folder to the latest version from GitHub (git pull), keep my .env and data folder as they are, install any new requirements, and restart ClipCraft. Read AGENTS.md first: if this folder's path is long or inside a temporary or assistant workspace, ask me before moving it to a short folder like C:\\clipcraft, and never delete anything without asking.";
   const cmd = (label, text) => `<h3>${label}</h3><div class="cmd"><code>${esc(text)}</code><button class="btn sm" type="button" data-act="copytext" data-t="${esc(text)}">${ic("copy")}Copy</button></div>`;
-  d.innerHTML = `<form method="dialog" class="dlg upd"><h2>${up.restart ? "The new version is ready" : "A new version of PeakCut is out"}</h2>
-    <p class="help">${up.restart ? "The new files are already in the PeakCut folder. <b>Close PeakCut and start it again</b> to use them." : `You're on <b>${esc(up.current)}</b>. ${up.behind ? `${up.behind} update${up.behind === 1 ? " has" : "s have"} been added since.` : "Newer changes have been added since."}`} Your settings, keys and clips stay as they are.</p>
+  d.innerHTML = `<form method="dialog" class="dlg upd"><h2>${up.restart ? "The new version is ready" : "A new version of ClipCraft is out"}</h2>
+    <p class="help">${up.restart ? "The new files are already in the ClipCraft folder. <b>Close ClipCraft and start it again</b> to use them." : `You're on <b>${esc(up.current)}</b>. ${up.behind ? `${up.behind} update${up.behind === 1 ? " has" : "s have"} been added since.` : "Newer changes have been added since."}`} Your settings, keys and clips stay as they are.</p>
     ${up.notes.length ? `<ul>${up.notes.map(n => `<li>${esc(n.title)} <small>${esc(n.date)}</small></li>`).join("")}</ul>` : ""}
-    ${up.restart ? "" : cmd("Ask your AI coding assistant (Claude, Cursor, Copilot...)", ai) + cmd("Or run it yourself, in the PeakCut folder", "git pull && pip install -r requirements.txt")}
-    <p class="sub">${up.restart ? "" : "Then stop PeakCut and start it again. With Docker, run <code>git pull && docker compose up -d --build</code> instead. "}<a class="lnk" href="${esc(up.url)}" target="_blank" rel="noopener">See every change on GitHub</a></p>
+    ${up.restart ? "" : cmd("Ask your AI coding assistant (Claude, Cursor, Copilot...)", ai) + cmd("Or run it yourself, in the ClipCraft folder", "git pull && pip install -r requirements.txt")}
+    <p class="sub">${up.restart ? "" : "Then stop ClipCraft and start it again. With Docker, run <code>git pull && docker compose up -d --build</code> instead. "}<a class="lnk" href="${esc(up.url)}" target="_blank" rel="noopener">See every change on GitHub</a></p>
     <div class="dlg-foot"><button class="btn" value="later">Remind me next version</button><button class="btn primary" value="ok" autofocus>Got it</button></div></form>`;
-  d.onclose = () => { if (d.returnValue === "later") { try { localStorage.setItem("peakcut_update_seen", up.latest); } catch {} drawShell(); } };
+  d.onclose = () => { if (d.returnValue === "later") { try { localStorage.setItem("clipcraft_update_seen", up.latest); } catch {} drawShell(); } };
   d.returnValue = "ok"; d.showModal();
 }
 function greeting() { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
@@ -1283,20 +1298,18 @@ function drawShell() {  const nav = (v, icon, label, extra = "") => `<button cla
                      : `<button class="btn primary" data-act="golive"><span class="rdot"></span>${liveOn(c).length ? "Record live stream" : "Start recording"}</button>`;
   }
   if (S.view === "overview" || S.view === "library") {
-    const L = S.status.links || {};
-    act = (L.repo ? `<a class="btn" href="${esc(L.repo)}" target="_blank" rel="noopener" title="Star PeakCut on GitHub">${ic("github")}<span>Star<span class="long"> on GitHub</span></span></a>` : "")
-        + (L.follow ? `<a class="btn primary" href="${esc(L.follow)}" target="_blank" rel="noopener" title="Follow the maker of PeakCut on Instagram">${ic("instagram")}Follow me</a>` : "");
+    act = `<div style="display:flex;align-items:center;gap:8px;"><span class="pill ok" style="background:rgba(0,229,255,0.1);color:#0097A7;border:1px solid rgba(0,229,255,0.25);font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;letter-spacing:0.5px;">⚡ CLIPCRAFT PRO</span></div>`;
   }
   const me = S.status.user;
   const kk = S.status.ai;
   const up = S.status.update;
   let upSeen = "";
-  try { upSeen = localStorage.getItem("peakcut_update_seen") || ""; } catch {}
-  const upBar = up && up.latest !== upSeen ? `<div class="vb" role="status">${ic("up")}<span>${up.restart ? "<b>The new version is downloaded.</b> Close PeakCut and start it again to use it." : `A new version of PeakCut is out${up.behind ? `: <b>${up.behind} update${up.behind === 1 ? "" : "s"}</b> since yours` : ""}.`}</span>
+  try { upSeen = localStorage.getItem("clipcraft_update_seen") || ""; } catch {}
+  const upBar = up && up.latest !== upSeen ? `<div class="vb" role="status">${ic("up")}<span>${up.restart ? "<b>The new version is downloaded.</b> Close ClipCraft and start it again to use it." : `A new version of ClipCraft is out${up.behind ? `: <b>${up.behind} update${up.behind === 1 ? "" : "s"}</b> since yours` : ""}.`}</span>
     <button class="btn sm primary" data-act="updhow">${up.restart ? "What's new" : "How to update"}</button><button class="btn sm ghost" data-act="updlater" aria-label="Hide until the next version">Later</button></div>` : "";
-  const toolBar = S.status.no_ffmpeg ? `<div class="vb" role="alert">${ic("warn")}<span><b>PeakCut can't make clips yet: ffmpeg isn't installed on this computer.</b> Open a terminal, run <code>winget install Gyan.FFmpeg</code> (Mac: <code>brew install ffmpeg</code>, Linux: <code>sudo apt install ffmpeg</code>), then close PeakCut and start it again.</span></div>` : "";
+  const toolBar = S.status.no_ffmpeg ? `<div class="vb" role="alert">${ic("warn")}<span><b>ClipCraft can't make clips yet: ffmpeg isn't installed on this computer.</b> Open a terminal, run <code>winget install Gyan.FFmpeg</code> (Mac: <code>brew install ffmpeg</code>, Linux: <code>sudo apt install ffmpeg</code>), then close ClipCraft and start it again.</span></div>` : "";
   const aiBar = !toolBar && S.status.ai?.problem && me?.is_admin && S.view !== "settings" ? `<div class="vb" role="status">${ic("warn")}<span><b>The AI isn't answering.</b> ${esc(S.status.ai.problem)} Until then, clips are picked by loudness.</span><button class="btn sm primary" data-act="go" data-v="settings" data-tab="ai">Open AI settings</button></div>` : "";
-  const diskBar = !toolBar && S.status.disk_full && S.view !== "settings" ? `<div class="vb" role="alert">${ic("warn")}<span><b>The drive PeakCut saves to is almost full, so it can't take new videos.</b> Free up space on it, or move PeakCut's folder to a bigger drive.</span>${me?.is_admin ? `<button class="btn sm primary" data-act="go" data-v="settings" data-tab="storage">Open Storage</button>` : ""}</div>` : "";
+  const diskBar = !toolBar && S.status.disk_full && S.view !== "settings" ? `<div class="vb" role="alert">${ic("warn")}<span><b>The drive ClipCraft saves to is almost full, so it can't take new videos.</b> Free up space on it, or move ClipCraft's folder to a bigger drive.</span>${me?.is_admin ? `<button class="btn sm primary" data-act="go" data-v="settings" data-tab="storage">Open Storage</button>` : ""}</div>` : "";
   put($("#vbanner"), toolBar ? toolBar : diskBar ? diskBar : aiBar ? aiBar : upBar ? upBar : me && me.verified === false ? `<div class="vb" role="status">${ic("warn")}<span>Confirm your email to start clipping. We sent a link to <b>${esc(me.email)}</b>.</span><button class="btn sm" data-act="resendverify">Send a new link</button></div>`
     : kk && kk.ready === false && S.view !== "usage" ? `<div class="vb" role="status">${ic("bolt")}<span>${me?.is_admin ? "Add your AI key to let the AI pick clips and write titles. Until then, clips are picked by loudness." : "The AI isn't set up on this server yet, so clips are picked by loudness."}</span>${me?.is_admin && S.view !== "settings" ? `<button class="btn sm primary" data-act="go" data-v="settings" data-tab="ai">${ic("plus")}Add AI key</button>` : ""}</div>` : "");
   put($("#tpic"), pic); $("#tpic").classList.toggle("live", !!(c && (c.live_job || liveOn(c).length)));
@@ -1529,7 +1542,7 @@ async function lookUp(u) {
     if (e instanceof TypeError) {           // the request itself dropped (network blip): try once more quietly
       await new Promise(r => setTimeout(r, 800));
       try { return await api("/api/preview?url=" + encodeURIComponent(u)); }
-      catch (e2) { throw new Error(e2 instanceof TypeError ? "Couldn't reach PeakCut to check that link. Check your connection and paste it again." : e2.message); }
+      catch (e2) { throw new Error(e2 instanceof TypeError ? "Couldn't reach ClipCraft to check that link. Check your connection and paste it again." : e2.message); }
     }
     throw e;
   }
@@ -1937,7 +1950,7 @@ function drawOverview() {
         ${barChart(o.daily || [])}</div>
       ${aiCard()}
     </div>
-    ${steps.length ? `<div class="card"><div class="card-head"><div><h2>Next steps</h2><p class="sub">Finish setting up PeakCut</p></div></div>
+    ${steps.length ? `<div class="card"><div class="card-head"><div><h2>Next steps</h2><p class="sub">Finish setting up ClipCraft</p></div></div>
       <div class="steps across">${steps.map((x, i) => `<button class="step" data-act="step" data-to="${esc(x[2])}"><span class="n">${i + 1}</span><span><b>${esc(x[0])}</b><span class="d">${esc(x[1])}</span></span>${ic("arrowr")}</button>`).join("")}</div></div>` : ""}
     <div class="card"><div class="card-head"><div><h2>Creators</h2><p class="sub">Each creator's status and results</p></div></div>
       ${o.creators.length ? `<div class="scroll"><table><tr><th>Creator</th><th>Status</th><th>Auto-post</th><th class="num">Clips today</th><th class="num">Posted today</th><th class="num">Waiting</th><th class="num">Failed</th><th class="num">Views</th><th class="num">Est. $</th></tr>
@@ -2023,7 +2036,7 @@ async function drawSettings() {
   try {
     if (tab === "ai") {
       const k = S.ai = await api("/api/ai");
-      body.innerHTML = `<section class="set-sec"><h2>AI</h2><p class="help">PeakCut uses an AI model to pick the moments worth clipping and to write hooks, titles and captions. Use your own key from any of these services. You pay that service directly. Without a key, clips are picked by loudness.</p>
+      body.innerHTML = `<section class="set-sec"><h2>AI</h2><p class="help">ClipCraft uses an AI model to pick the moments worth clipping and to write hooks, titles and captions. Use your own key from any of these services. You pay that service directly. Without a key, clips are picked by loudness.</p>
           <div class="ai-state">${k.ready ? `<span class="pill ok">${ic("check")}Ready</span><span class="sub">${esc(k.label)} · ${esc(k.models[0] || "")}</span>` : `<span class="pill warn">Not set up</span><span class="sub">Choose a service, paste your key and pick a model.</span>`}</div>
           <div class="ai-form">
             <label class="f">AI service<select id="ai_provider">${k.providers.map(x => `<option value="${esc(x.id)}" ${x.id === k.provider ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select></label>
@@ -2037,7 +2050,7 @@ async function drawSettings() {
     }
     if (tab === "profile") {
       const joined = me.created_at ? new Date(me.created_at * 1000).toLocaleDateString([], {day: "numeric", month: "long", year: "numeric"}) : "";
-      body.innerHTML = `<section class="set-sec"><h2>Profile</h2><p class="help">This is how you appear in PeakCut.</p>
+      body.innerHTML = `<section class="set-sec"><h2>Profile</h2><p class="help">This is how you appear in ClipCraft.</p>
         <div class="prof">${meAvatar(me).replace('class="avatar me-pic"', 'class="avatar prof-pic"')}<div><b>${esc(me.name)}</b><span>${esc(me.email)}</span></div></div>
         <dl class="kv"><div><dt>Email</dt><dd>${esc(me.email)} ${me.verified === false ? `<span class="pill warn">Not confirmed</span>` : `<span class="pill ok">Confirmed</span>`}</dd></div>
           <div><dt>Sign-in method</dt><dd>${me.google ? `Google${me.has_password ? " and password" : ""}` : "Email and password"}</dd></div>
@@ -2051,7 +2064,7 @@ async function drawSettings() {
             <label class="f">${me.has_password ? "New password" : "Password"}<input id="pw_new" type="password" autocomplete="new-password" placeholder="At least 8 characters"></label></div>
           <div class="row" style="margin-top:14px"><button class="btn primary" data-act="pwsave">${me.has_password ? "Change password" : "Set password"}</button>
             ${me.has_password ? `<a class="btn ghost" href="/reset">Forgot it?</a>` : ""}</div></section>
-        <section class="set-sec"><h2>Sessions</h2><p class="help">Sign out of PeakCut on this device. Changing your password signs out every other device too.</p>
+        <section class="set-sec"><h2>Sessions</h2><p class="help">Sign out of ClipCraft on this device. Changing your password signs out every other device too.</p>
           <button class="btn" data-act="logout">${ic("signout")}Sign out</button></section>
         <section class="set-sec"><h2 style="color:var(--bad)">Delete account</h2><p class="help">Removes your account and everything in it for good: creators, recordings, videos, clips and history.</p>
           <button class="btn danger" data-act="delaccount">${ic("trash")}Delete my account</button></section>`;
@@ -2060,16 +2073,16 @@ async function drawSettings() {
       const s = S.stor = await api("/api/storage");
       const usedPct = s.total_gb ? Math.min(100, Math.max(1, 100 * (s.total_gb - s.free_gb) / s.total_gb)) : 0;
       const gb = n => `${Number(n).toLocaleString(undefined, {maximumFractionDigits: 1})} GB`;
-      body.innerHTML = `<section class="set-sec"><h2>Storage</h2><p class="help">Everything PeakCut keeps is in one folder: your videos, clips, recordings, creators and settings. You can open it, back it up, or move it to a drive with more room.</p>
-          ${s.full ? `<div class="note" style="margin:0 0 14px">${ic("warn")}<span><b>This drive is almost full, so PeakCut can't take new videos.</b> ${gb(s.free_gb)} free on ${esc(s.drive)}; it needs at least ${gb(s.min_free_gb)}. Free up space, or move the folder to another drive below.</span></div>` : ""}
-          ${s.pending ? `<div class="note" style="margin:0 0 14px">${ic("clock")}<span><b>The folder changes to ${esc(s.pending)} the next time PeakCut starts.</b> Close PeakCut and start it again. <button class="btn sm ghost" data-act="storcancel">Undo</button></span></div>` : ""}
+      body.innerHTML = `<section class="set-sec"><h2>Storage</h2><p class="help">Everything ClipCraft keeps is in one folder: your videos, clips, recordings, creators and settings. You can open it, back it up, or move it to a drive with more room.</p>
+          ${s.full ? `<div class="note" style="margin:0 0 14px">${ic("warn")}<span><b>This drive is almost full, so ClipCraft can't take new videos.</b> ${gb(s.free_gb)} free on ${esc(s.drive)}; it needs at least ${gb(s.min_free_gb)}. Free up space, or move the folder to another drive below.</span></div>` : ""}
+          ${s.pending ? `<div class="note" style="margin:0 0 14px">${ic("clock")}<span><b>The folder changes to ${esc(s.pending)} the next time ClipCraft starts.</b> Close ClipCraft and start it again. <button class="btn sm ghost" data-act="storcancel">Undo</button></span></div>` : ""}
           <div class="stor-path"><code>${esc(s.path)}</code>${s.local ? `<button class="btn" data-act="storopen">${ic("folder")}Open folder</button>` : ""}</div>
           <div class="stor-bar ${s.full ? "low" : ""}" role="img" aria-label="${Math.round(usedPct)}% of the drive is used"><i style="width:${usedPct}%"></i></div>
-          <div class="stor-nums"><span>PeakCut uses <b>${gb(s.used_gb)}</b></span><span><b>${gb(s.free_gb)}</b> free of ${gb(s.total_gb)} on ${esc(s.drive)}</span></div>
+          <div class="stor-nums"><span>ClipCraft uses <b>${gb(s.used_gb)}</b></span><span><b>${gb(s.free_gb)}</b> free of ${gb(s.total_gb)} on ${esc(s.drive)}</span></div>
           ${s.fixed ? `<p class="sub" style="margin-top:16px">This folder is set with PEAKCUT_DATA in the .env file. Change it there, or remove that line to choose it here.</p>`
-            : S.storOpen ? `<div class="stor-change"><label class="f">New folder<span class="with"><input id="stor_new" placeholder="For example D:\\PeakCut" spellcheck="false" value="${esc(S.storNew || "")}">${s.local ? `<button class="btn" type="button" data-act="storpick">Browse</button>` : ""}</span></label>
+            : S.storOpen ? `<div class="stor-change"><label class="f">New folder<span class="with"><input id="stor_new" placeholder="For example D:\\ClipCraft" spellcheck="false" value="${esc(S.storNew || "")}">${s.local ? `<button class="btn" type="button" data-act="storpick">Browse</button>` : ""}</span></label>
                 <label class="ck"><input type="checkbox" id="stor_move" checked>Move everything that is in the current folder there too</label>
-                <p class="sub">The change happens the next time PeakCut starts, so nothing is moved while a video is being made.</p>
+                <p class="sub">The change happens the next time ClipCraft starts, so nothing is moved while a video is being made.</p>
                 <div class="row"><button class="btn primary" data-act="storsave">Use this folder</button><button class="btn ghost" data-act="storchange">Cancel</button></div></div>`
             : `<div class="row" style="margin-top:16px"><button class="btn" data-act="storchange">Change folder</button></div>`}</section>`;
     }
@@ -2107,7 +2120,7 @@ async function drawSettings() {
             <p class="sub">To let people connect ${name}, register this server once with <a href="${g[0]}" target="_blank" rel="noopener">${g[1]}</a>. It takes about five minutes.</p>
             <ol>${g[2].map(x => `<li>${x}</li>`).join("")}</ol>
             <div class="copyrow"><code>${esc(st.redirect)}</code><button class="btn sm" data-act="copytext" data-t="${esc(st.redirect)}">${ic("copy")}Copy</button></div>
-            ${!st.https && pf !== "youtube" ? `<p class="warnline">${name} only accepts https addresses. Put PeakCut on a domain with https (or a tunnel) and set PEAKCUT_PUBLIC_URL to it first.</p>` : ""}
+            ${!st.https && pf !== "youtube" ? `<p class="warnline">${name} only accepts https addresses. Put ClipCraft on a domain with https (or a tunnel) and set PEAKCUT_PUBLIC_URL to it first.</p>` : ""}
             <div class="fields"><label class="f">${esc(st.id_label)}<input id="app_id" placeholder="${st.ready ? "Saved: " + esc(st.id_hint) + ". Paste a new one to replace it" : ""}" autocomplete="off" spellcheck="false"></label>
               <label class="f">${esc(st.secret_label)}<input id="app_secret" type="password" placeholder="${st.ready ? "Saved. Paste a new one to replace it" : ""}" autocomplete="off"></label></div>
             <p class="sub">${g[3]}</p>
@@ -2115,7 +2128,7 @@ async function drawSettings() {
         return `<div class="appcard"><span class="applogo" style="background:${bg}">${logo}</span>
           <div class="apptx"><b>${name}</b><span>${desc}</span>${listOf(accs)}</div><div class="appact">${act}</div>${panel}</div>`;
       };
-      body.innerHTML = `<section class="set-sec"><h2>Connected apps</h2><p class="help">Connect the accounts PeakCut posts clips to: press Connect, sign in on the platform's own page, and you're back here. PeakCut never sees your passwords. Then pick which accounts each creator posts to, in that creator's Setup.</p>
+      body.innerHTML = `<section class="set-sec"><h2>Connected apps</h2><p class="help">Connect the accounts ClipCraft posts clips to: press Connect, sign in on the platform's own page, and you're back here. ClipCraft never sees your passwords. Then pick which accounts each creator posts to, in that creator's Setup.</p>
         <div class="apps">
           ${card("youtube", "YouTube", yt, "#FF0000", "Post clips to your channel as Shorts.")}
           ${card("instagram", "Instagram", ig, "linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)", "Post clips as Reels. Needs a Creator or Business account.")}
@@ -2418,7 +2431,7 @@ document.addEventListener("click", async e => {
     if (a === "tour") return startTour();
     if (a === "settab") { e.preventDefault(); S.stab = d.k; remember("settings", d.k); return drawSettings(); }
     if (a === "updhow") return updateHow();
-    if (a === "updlater") { try { localStorage.setItem("peakcut_update_seen", S.status.update?.latest || ""); } catch {} return drawShell(); }
+    if (a === "updlater") { try { localStorage.setItem("clipcraft_update_seen", S.status.update?.latest || ""); } catch {} return drawShell(); }
     if (a === "storopen") { await send("/api/storage/open"); return; }
     if (a === "storchange") { S.storOpen = !S.storOpen; S.storNew = ""; return drawSettings(); }
     if (a === "storpick") {
@@ -2428,7 +2441,7 @@ document.addEventListener("click", async e => {
     }
     if (a === "storsave") {
       const s = await send("/api/storage", {path: $("#stor_new").value, move: $("#stor_move").checked}, "PUT");
-      S.storOpen = false; toast("Saved. Close PeakCut and start it again to switch to the new folder.", "ok"); return drawSettings();
+      S.storOpen = false; toast("Saved. Close ClipCraft and start it again to switch to the new folder.", "ok"); return drawSettings();
     }
     if (a === "storcancel") { await send("/api/storage", {cancel: true}, "PUT"); toast("Kept the current folder", "ok"); return drawSettings(); }
     if (a === "appsetup") { S.setupOpen = d.p && S.setupOpen !== d.p ? d.p : ""; return drawSettings(); }
@@ -2490,8 +2503,8 @@ $("#main").addEventListener("scroll", () => $(".topbar").classList.toggle("stuck
   await tick();
   { const [v, tab] = location.pathname.startsWith("/app/") ? fromPath(location.pathname) : ["overview", "clips"]; go(v, tab, true); remember(S.view, S.ctab, "replace"); }
   try {  // a link pasted on the home page before signing up
-    const link = sessionStorage.getItem("peakcut_link");
-    if (link) { sessionStorage.removeItem("peakcut_link"); go("overview"); $("#url").value = link; onLink($("#url")); $("#url").focus(); toast("Your link is ready. Press Make clips.", "ok"); }
+    const link = sessionStorage.getItem("clipcraft_link");
+    if (link) { sessionStorage.removeItem("clipcraft_link"); go("overview"); $("#url").value = link; onLink($("#url")); $("#url").focus(); toast("Your link is ready. Press Make clips.", "ok"); }
   } catch {}
   loop();
   if (S.status.tour && !$("#formdlg").open) setTimeout(startTour, 500);   // once, the first time someone signs in

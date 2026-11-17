@@ -162,7 +162,10 @@ def list_models(provider_id=None, address=None, with_key=None) -> list:
         found = [m.get("name", "").split("/")[-1] for m in data.get("models", [])
                  if "generateContent" in (m.get("supportedGenerationMethods") or [])]
     else:
-        found = [m.get("id", "") for m in data.get("data", []) if isinstance(m, dict)]
+        # Exclude audio, guard, and non-chat utility models
+        ignore = ("guard", "whisper", "embedding", "moderation", "tts", "rerank", "orpheus")
+        found = [m.get("id", "") for m in data.get("data", [])
+                 if isinstance(m, dict) and not any(ig in m.get("id", "").lower() for ig in ignore)]
     return sorted({m for m in found if m})[:400]
 
 
