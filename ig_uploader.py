@@ -216,7 +216,8 @@ def main():
     parser.add_argument("--login", action="store_true", help="One-time login to save your Instagram session")
     parser.add_argument("--video", type=str, help="Path to the MP4 video to upload")
     parser.add_argument("--latest", action="store_true", help="Automatically pick the latest clip from ClipCraft")
-    parser.add_argument("--caption", type=str, default="Viral clip made with ClipCraft AI #shorts #reels", help="Caption text")
+    parser.add_argument("--caption", type=str, default="", help="Caption text")
+    parser.add_argument("--caption-file", type=str, default="caption.txt", help="Path to a text file containing the caption (preserves Japanese/Hindi characters perfectly)")
     parser.add_argument("--headless", action="store_true", help="Run browser in background")
 
     args = parser.parse_args()
@@ -224,6 +225,17 @@ def main():
     if args.login:
         run_login()
         return
+
+    # Handle caption (prefer caption-file if it exists, else --caption)
+    caption_text = args.caption
+    if os.path.isfile(args.caption_file):
+        try:
+            with open(args.caption_file, "r", encoding="utf-8") as cf:
+                caption_text = cf.read().strip()
+        except Exception:
+            pass
+    if not caption_text:
+        caption_text = "Viral clip made with ClipCraft AI #shorts #reels"
 
     video_file = None
     if args.latest:
@@ -239,7 +251,7 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    upload_reel(video_file, args.caption, headless=args.headless)
+    upload_reel(video_file, caption_text, headless=args.headless)
 
 
 if __name__ == "__main__":
