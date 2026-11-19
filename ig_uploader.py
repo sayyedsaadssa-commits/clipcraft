@@ -120,23 +120,23 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
                 pass
 
         print("Locating Create (+) button...")
-        create_btn = page.locator("svg[aria-label='New post'], svg[aria-label='New Post']").first
+        create_btn = page.locator("svg[aria-label='New post'], svg[aria-label='New Post'], svg[aria-label='新規投稿'], svg[aria-label='新しい投稿']").first
         if not create_btn.is_visible(timeout=3000):
-            # Fallback to search by text
-            create_btn = page.locator("a:has-text('Create'), span:has-text('Create')").first
+            create_btn = page.locator("a:has-text('Create'), span:has-text('Create'), a:has-text('作成'), span:has-text('作成')").first
 
         create_btn.click()
-        time.sleep(1.5)
+        time.sleep(1)
 
-        # Upload file via file chooser or file input
+        # Upload file directly via input[type="file"] (universal, zero language dependence)
         print(f"Uploading file: {video_path.name}...")
-        file_input = page.locator("input[type='file']").first
-        if file_input.count() > 0:
-            file_input.set_input_files(abs_video)
-        else:
+        try:
+            page.wait_for_selector("input[type='file']", state="attached", timeout=8000)
+            page.set_input_files("input[type='file']", abs_video)
+        except Exception:
+            # Fallback if dialog button needs click
             with page.expect_file_chooser(timeout=5000) as fc_info:
-                select_btn = page.locator("button:has-text('Select from computer')").first
-                select_btn.click()
+                dialog_btn = page.locator("div[role='dialog'] button, button:has-text('Select'), button:has-text('選択')").first
+                dialog_btn.click()
             file_chooser = fc_info.value
             file_chooser.set_files(abs_video)
 
@@ -144,8 +144,8 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
 
         # Handle "Video posts are now shared as reels" modal if it appears
         try:
-            ok_btn = page.locator("button:has-text('OK'), div[role='button']:has-text('OK')").first
-            if ok_btn.is_visible(timeout=2000):
+            ok_btn = page.locator("button:has-text('OK'), div[role='button']:has-text('OK'), button:has-text('ok')").first
+            if ok_btn.is_visible(timeout=3000):
                 ok_btn.click()
                 time.sleep(1)
         except Exception:
@@ -153,7 +153,7 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
 
         # Handle Aspect Ratio: ensure 9:16 vertical crop
         try:
-            crop_btn = page.locator("button:has(svg[aria-label='Select crop']), svg[aria-label='Select crop']").first
+            crop_btn = page.locator("button:has(svg[aria-label='Select crop']), svg[aria-label='Select crop'], svg[aria-label='切り抜きを選択']").first
             if crop_btn.is_visible(timeout=2000):
                 crop_btn.click()
                 time.sleep(0.5)
@@ -164,38 +164,40 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
         except Exception:
             pass
 
-        # Step 1: Click "Next"
+        # Step 1: Click "Next" / "次へ"
         print("Progressing to trimming / cover photo...")
-        next_btn = page.locator("div[role='button']:has-text('Next'), button:has-text('Next')").first
-        next_btn.click(timeout=5000)
+        next_sel = "div[role='button']:has-text('Next'), button:has-text('Next'), div[role='button']:has-text('次へ'), button:has-text('次へ')"
+        next_btn = page.locator(next_sel).first
+        next_btn.click(timeout=8000)
         time.sleep(2)
 
-        # Step 2: Click "Next" again (to caption screen)
+        # Step 2: Click "Next" / "次へ" again (to caption screen)
         print("Progressing to caption screen...")
-        next_btn = page.locator("div[role='button']:has-text('Next'), button:has-text('Next')").first
-        next_btn.click(timeout=5000)
+        next_btn = page.locator(next_sel).first
+        next_btn.click(timeout=8000)
         time.sleep(2)
 
         # Step 3: Type Caption
         print("Entering caption and hashtags...")
-        caption_box = page.locator("div[aria-label='Write a caption...'], div[contenteditable='true'], div[role='textbox']").first
+        caption_box = page.locator("div[aria-label='Write a caption...'], div[aria-label='キャプションを書く...'], div[contenteditable='true'], div[role='textbox']").first
         caption_box.click(timeout=4000)
         time.sleep(0.5)
         caption_box.fill(caption)
         time.sleep(1)
 
-        # Step 4: Click "Share"
+        # Step 4: Click "Share" / "シェア"
         print("Publishing Reel to Instagram...")
-        share_btn = page.locator("div[role='button']:has-text('Share'), button:has-text('Share')").first
-        share_btn.click(timeout=5000)
+        share_sel = "div[role='button']:has-text('Share'), button:has-text('Share'), div[role='button']:has-text('シェア'), button:has-text('シェア')"
+        share_btn = page.locator(share_sel).first
+        share_btn.click(timeout=8000)
 
         # Step 5: Wait for confirmation
         print("Waiting for upload confirmation (processing video)...")
         success = False
-        for _ in range(30):
+        for _ in range(35):
             time.sleep(2)
             content = page.content()
-            if "Your reel has been shared" in content or "Your post has been shared" in content or "reel has been shared" in content:
+            if any(w in content for w in ["Your reel has been shared", "Your post has been shared", "reel has been shared", "リールがシェアされました", "投稿がシェアされました"]):
                 success = True
                 break
 
