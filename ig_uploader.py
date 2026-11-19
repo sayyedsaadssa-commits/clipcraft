@@ -127,9 +127,9 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
         create_btn.click()
         time.sleep(1)
 
-        # Handle Create Menu: Click "Post" (Reels are uploaded under Post)
+        # Handle Create Menu: Click "Post"
         print("Selecting 'Post' from Create menu...")
-        for it in page.locator("div[tabindex='-1'] span, div[role='menu'] span, span").all():
+        for it in page.locator("div[tabindex='-1'] span, div[role='menu'] span").all():
             txt = it.text_content().strip()
             if txt in ["Post", "投稿"]:
                 try:
@@ -140,20 +140,13 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
                 except Exception:
                     pass
 
-        # Upload file directly via input[type="file"] (universal, zero language dependence)
+        # Upload file directly via input[type="file"]
         print(f"Uploading file: {video_path.name}...")
-        try:
-            page.wait_for_selector("input[type='file']", state="attached", timeout=10000)
-            page.set_input_files("input[type='file']", abs_video)
-        except Exception:
-            # Fallback if dialog button needs click
-            with page.expect_file_chooser(timeout=5000) as fc_info:
-                dialog_btn = page.locator("div[role='dialog'] button, button:has-text('Select'), button:has-text('選択')").first
-                dialog_btn.click()
-            file_chooser = fc_info.value
-            file_chooser.set_files(abs_video)
-
-        time.sleep(4)
+        page.wait_for_selector("input[type='file']", state="attached", timeout=15000)
+        file_input = page.locator("input[type='file']").first
+        file_input.set_input_files(abs_video)
+        print("Video attached! Waiting 5s for preview to load...")
+        time.sleep(5)
 
         # Handle "Video posts are now shared as reels" modal if it appears
         try:
@@ -178,36 +171,34 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
             pass
 
         # Step 1: Click "Next" / "次へ"
-        print("Progressing to trimming / cover photo...")
         next_sel = "div[role='button']:has-text('Next'), button:has-text('Next'), div[role='button']:has-text('次へ'), button:has-text('次へ')"
-        next_btn = page.locator(next_sel).first
-        next_btn.click(timeout=8000)
-        time.sleep(2)
+        print("Progressing to trimming / cover photo...")
+        page.locator(next_sel).first.click(timeout=10000)
+        time.sleep(3)
 
         # Step 2: Click "Next" / "次へ" again (to caption screen)
         print("Progressing to caption screen...")
-        next_btn = page.locator(next_sel).first
-        next_btn.click(timeout=8000)
-        time.sleep(2)
+        page.locator(next_sel).first.click(timeout=10000)
+        time.sleep(3)
 
         # Step 3: Type Caption
         print("Entering caption and hashtags...")
         caption_box = page.locator("div[aria-label='Write a caption...'], div[aria-label='キャプションを書く...'], div[contenteditable='true'], div[role='textbox']").first
-        caption_box.click(timeout=4000)
+        caption_box.click(timeout=5000)
         time.sleep(0.5)
         caption_box.fill(caption)
-        time.sleep(1)
+        time.sleep(1.5)
 
         # Step 4: Click "Share" / "シェア"
         print("Publishing Reel to Instagram...")
         share_sel = "div[role='button']:has-text('Share'), button:has-text('Share'), div[role='button']:has-text('シェア'), button:has-text('シェア')"
         share_btn = page.locator(share_sel).first
-        share_btn.click(timeout=8000)
+        share_btn.click(timeout=12000)
 
         # Step 5: Wait for confirmation
         print("Waiting for upload confirmation (processing video)...")
         success = False
-        for _ in range(35):
+        for _ in range(40):
             time.sleep(2)
             content = page.content()
             if any(w in content for w in ["Your reel has been shared", "Your post has been shared", "reel has been shared", "リールがシェアされました", "投稿がシェアされました"]):
