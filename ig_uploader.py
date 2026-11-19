@@ -173,12 +173,18 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
         # Step 1: Click "Next" / "次へ"
         next_sel = "div[role='button']:has-text('Next'), button:has-text('Next'), div[role='button']:has-text('次へ'), button:has-text('次へ')"
         print("Progressing to trimming / cover photo...")
-        page.locator(next_sel).first.click(timeout=10000)
+        try:
+            page.locator(next_sel).first.click(timeout=10000, force=True)
+        except Exception:
+            page.locator(next_sel).first.dispatch_event("click")
         time.sleep(3)
 
         # Step 2: Click "Next" / "次へ" again (to caption screen)
         print("Progressing to caption screen...")
-        page.locator(next_sel).first.click(timeout=10000)
+        try:
+            page.locator(next_sel).first.click(timeout=10000, force=True)
+        except Exception:
+            page.locator(next_sel).first.dispatch_event("click")
         time.sleep(3)
 
         # Step 3: Type Caption
@@ -187,18 +193,53 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
         caption_box.click(timeout=5000)
         time.sleep(0.5)
         caption_box.fill(caption)
-        time.sleep(1.5)
+        time.sleep(1)
+
+        # Unfocus/blur caption box and close any active autocomplete suggestions
+        try:
+            caption_box.evaluate("el => el.blur()")
+            page.keyboard.press("Escape")
+            time.sleep(1)
+        except Exception:
+            pass
 
         # Step 4: Click "Share" / "シェア"
         print("Publishing Reel to Instagram...")
         share_sel = "div[role='button']:has-text('Share'), button:has-text('Share'), div[role='button']:has-text('シェア'), button:has-text('シェア')"
         share_btn = page.locator(share_sel).first
-        share_btn.click(timeout=12000)
+        clicked = False
+        try:
+            share_btn.click(timeout=5000, force=True)
+            clicked = True
+        except Exception:
+            pass
+
+        if not clicked:
+            try:
+                share_btn.dispatch_event("click")
+                clicked = True
+            except Exception:
+                pass
+
+        if not clicked:
+            try:
+                page.evaluate("""() => {
+                    const candidates = Array.from(document.querySelectorAll("div[role='button'], button, span"));
+                    for (const el of candidates) {
+                        const txt = (el.textContent || '').trim();
+                        if (txt === 'Share' || txt === 'シェア') {
+                            el.click();
+                            return;
+                        }
+                    }
+                }""")
+            except Exception:
+                pass
 
         # Step 5: Wait for confirmation
         print("Waiting for upload confirmation (processing video)...")
         success = False
-        for _ in range(40):
+        for _ in range(45):
             time.sleep(2)
             content = page.content()
             if any(w in content for w in ["Your reel has been shared", "Your post has been shared", "reel has been shared", "リールがシェアされました", "投稿がシェアされました"]):
