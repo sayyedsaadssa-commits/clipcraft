@@ -127,10 +127,23 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
         create_btn.click()
         time.sleep(1)
 
+        # Handle Create Menu: Click "Post" (Reels are uploaded under Post)
+        print("Selecting 'Post' from Create menu...")
+        for it in page.locator("div[tabindex='-1'] span, div[role='menu'] span, span").all():
+            txt = it.text_content().strip()
+            if txt in ["Post", "投稿"]:
+                try:
+                    it.click()
+                    print(f"Clicked menu option: {txt}")
+                    time.sleep(1.5)
+                    break
+                except Exception:
+                    pass
+
         # Upload file directly via input[type="file"] (universal, zero language dependence)
         print(f"Uploading file: {video_path.name}...")
         try:
-            page.wait_for_selector("input[type='file']", state="attached", timeout=8000)
+            page.wait_for_selector("input[type='file']", state="attached", timeout=10000)
             page.set_input_files("input[type='file']", abs_video)
         except Exception:
             # Fallback if dialog button needs click
@@ -140,7 +153,7 @@ def upload_reel(video_path: Path, caption: str, headless: bool = False) -> bool:
             file_chooser = fc_info.value
             file_chooser.set_files(abs_video)
 
-        time.sleep(3)
+        time.sleep(4)
 
         # Handle "Video posts are now shared as reels" modal if it appears
         try:
