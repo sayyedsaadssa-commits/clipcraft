@@ -824,6 +824,50 @@ dialog[open]{animation:fadein .16s ease}
   .set-sec h2{font-size:16px}
   .ai-big{font-size:24px}
 }
+
+/* ---------- whop campaigns hub */
+.whop-hub{display:flex;flex-direction:column;gap:20px;max-width:1300px;margin:0 auto}
+.whop-hero{background:linear-gradient(135deg,rgba(0,229,255,0.06) 0%,rgba(14,20,32,0.95) 100%);border:1px solid rgba(0,229,255,0.25);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;gap:16px}
+.whop-hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.whop-badge-glow{display:inline-flex;align-items:center;gap:6px;background:rgba(0,229,255,0.12);color:#00E5FF;border:1px solid rgba(0,229,255,0.35);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.whop-kpis{display:flex;gap:12px;flex-wrap:wrap}
+.whop-kpi{display:flex;flex-direction:column;gap:2px;background:#0E1420;border:1px solid var(--line);border-radius:10px;padding:10px 16px;flex:1;min-width:140px}
+.whop-kpi b{font-size:17px;color:#00E5FF;font-weight:800}
+.whop-kpi span{font-size:11px;color:var(--dim)}
+.whop-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.whop-search{flex:1;min-width:240px;height:40px;background:#0B1019;border:1px solid var(--line-2);border-radius:8px;padding:0 12px;color:#fff;outline:none}
+.whop-search:focus{border-color:var(--brand)}
+.whop-pill{padding:6px 14px;background:#0E1420;border:1px solid var(--line);border-radius:20px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer;transition:all .15s ease}
+.whop-pill:hover,.whop-pill.on{background:rgba(0,229,255,0.15);color:#00E5FF;border-color:rgba(0,229,255,0.5)}
+.whop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px}
+.whop-card{background:#0E1420;border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;transition:transform .15s ease,border-color .15s ease;position:relative}
+.whop-card:hover{border-color:rgba(0,229,255,0.4);transform:translateY(-2px)}
+.whop-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.whop-creator{display:flex;align-items:center;gap:12px}
+.whop-avatar{width:48px;height:48px;border-radius:50%;background:#131B27;border:2px solid rgba(0,229,255,0.4);display:grid;place-items:center;font-weight:700;color:#00E5FF;font-size:16px;overflow:hidden;flex:none}
+.whop-creator-info h3{font-size:16px;font-weight:700;color:#fff;margin:0}
+.whop-creator-info span{font-size:12px;color:var(--dim)}
+.whop-rate-badge{background:rgba(0,229,255,0.12);color:#00E5FF;border:1px solid rgba(0,229,255,0.4);padding:6px 12px;border-radius:8px;text-align:right;white-space:nowrap}
+.whop-budget-bar{height:6px;background:#141C2B;border-radius:999px;overflow:hidden;position:relative}
+.whop-budget-bar i{display:block;height:100%;background:linear-gradient(90deg,#00E5FF,#00FF9D);border-radius:999px}
+.whop-budget-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--dim)}
+.whop-section{display:flex;flex-direction:column;gap:8px;background:#090E17;border:1px solid var(--line);border-radius:10px;padding:12px}
+.whop-section-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);display:flex;align-items:center;gap:6px}
+.whop-section-title svg{width:14px;height:14px;color:#00E5FF}
+.whop-req-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:#C9D6E4;line-height:1.4}
+.whop-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.whop-spec-item{background:#111927;border-radius:7px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.whop-spec-item small{font-size:10px;color:var(--dim);text-transform:uppercase;font-weight:600}
+.whop-spec-item b{font-size:12px;color:#fff;font-weight:600}
+.whop-plat-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+.whop-plat-tag{background:rgba(255,255,255,0.06);border:1px solid var(--line);border-radius:5px;padding:2px 6px;font-size:10px;color:#E0E8F0;font-weight:500}
+.whop-mats{display:flex;flex-direction:column;gap:6px}
+.whop-mat-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#111927;border-radius:7px;padding:8px 10px}
+.whop-mat-name{font-size:12px;color:#fff;font-weight:600;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.whop-mat-name svg{width:14px;height:14px;color:#00E5FF;flex:none}
+.whop-actions{display:flex;gap:8px;margin-top:auto;padding-top:4px}
+.whop-btn-clip{background:linear-gradient(135deg,#00E5FF,#0099FF);color:#030B10;font-weight:700;border:none;border-radius:7px;padding:5px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:4px;transition:opacity .15s ease}
+.whop-btn-clip:hover{opacity:.9}
 </style>
 </head>
 <body>
@@ -1276,6 +1320,7 @@ function drawShell() {  const nav = (v, icon, label, extra = "") => `<button cla
   put($("#nav"), nav("overview", navIc("home", "overview"), "Home") +
     nav("library", navIc("film", "library"), "All videos", (() => { const w = S.jobs.filter(j => ["queued", "running"].includes(j.status)).length;
       return w ? `<span class="working" title="${w} working now"><i></i>${w} working</span>` : S.jobs.length ? `<span class="count">${S.jobs.length}</span>` : ""; })()) +
+    nav("whop", navIc("money", "whop"), "Whop Bounties", `<span class="sb-tag" style="background:rgba(0,229,255,0.15);color:#00E5FF;border:1px solid rgba(0,229,255,0.4)">$ Rewards</span>`) +
     `<h4><span>Creators</span></h4>` +
     S.creators.map(c => nav("c:" + c.id, cav(c), c.name,
       c.live_job ? `<span class="sb-tag rec" title="Recording now"><i></i>Rec</span>`
@@ -1291,10 +1336,14 @@ function drawShell() {  const nav = (v, icon, label, extra = "") => `<button cla
       <button class="icon-btn bell" data-act="bell" title="Notifications" aria-label="Notifications${S.status.unread ? `, ${S.status.unread} new` : ""}" aria-haspopup="dialog">${ic("bell")}${S.status.unread ? `<span class="dotn">${S.status.unread > 9 ? "9+" : S.status.unread}</span>` : ""}</button></div>` : ""));
   const c = creator();
   const recording = S.creators.filter(x => x.live_job).length;
-  let title = {overview:"Home", library:"All videos", settings:"Settings", usage:"AI usage"}[S.view] || "", sub = "", act = "";
+  let title = {overview:"Home", library:"All videos", whop:"Whop Rewards & Creator Bounties", settings:"Settings", usage:"AI usage"}[S.view] || "", sub = "", act = "";
   if (S.view === "usage") sub = "What the AI has been used for.";
   if (S.view === "overview") sub = `${greeting()}. ${S.creators.length} creator${S.creators.length === 1 ? "" : "s"}${recording ? `, ${recording} recording now` : ""}.`;
   if (S.view === "library") sub = "Every video and recording, across all creators.";
+  if (S.view === "whop") {
+    sub = "Browse active creator bounties, video requirements, preferred aspect ratios, and raw material.";
+    act = `<div style="display:flex;align-items:center;gap:8px;"><button class="btn primary sm" data-act="whop-add">${ic("plus")}Add Custom Bounty</button><a class="btn sm ghost" href="https://whop.com/contentrewards" target="_blank" rel="noopener">${ic("upright")}Whop Dashboard</a></div>`;
+  }
   if (S.view === "settings") sub = (S.status.accounts === false ? "Your AI key and connected apps." : "Your profile, security and connected apps.");
   let pic = "", subHtml = null, tabs = "";
   if (c) {
@@ -1359,6 +1408,7 @@ function go(v, tab, fromHistory) {
       <p>Paste a link or drop in videos. You get captioned shorts back.</p><div id="add"></div></section>` : "";
   if (v === "overview") view.innerHTML = `<div id="ov"></div>`;
   else if (v === "library") view.innerHTML = `<div id="add"></div><div id="jobs"></div>`;
+  else if (v === "whop") { view.innerHTML = `<div id="whop"></div>`; loadWhop(); }
   else if (v === "settings") view.innerHTML = `<div id="sform"></div>`;
   else if (v === "usage") { view.innerHTML = `<div id="usage"></div>`; loadUsage(); }
   else view.innerHTML = `<div id="stream"></div><div id="cbody"></div>`;   // the live player stays put across tabs: no restart, no rebuffer
@@ -1368,6 +1418,7 @@ function go(v, tab, fromHistory) {
   if (v.startsWith("c:")) setTab(S.ctab);
   $("#main").scrollTo(0, 0); render();
   if (v === "overview") loadOverview();
+  if (v === "whop") loadWhop();
 }
 function setTab(t) {
   S.ctab = t;
@@ -2013,6 +2064,208 @@ function drawOverview() {
       : `<p class="help">Nothing queued or posted yet.</p>`}</div>`);
 }
 
+/* ============================================================ Whop Campaigns */
+S.whopCampaigns = [];
+S.whopFilter = "all";
+S.whopSearch = "";
+
+async function loadWhop() {
+  try {
+    const res = await api("/api/whop/campaigns");
+    S.whopCampaigns = res.campaigns || [];
+  } catch (e) {
+    toast("Could not load Whop campaigns: " + e.message, "bad");
+  }
+  drawWhop();
+}
+
+function clipFromWhop(url, layout, style, title) {
+  go("overview");
+  setTimeout(() => {
+    const input = $("#url");
+    if (input) {
+      input.value = url;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      const optBtn = $("#optsToggle");
+      if (optBtn && !$("#optspanel")?.classList.contains("open")) optBtn.click();
+      if (layout) {
+        const lBtn = document.querySelector(`.tiles3 button[data-k="${layout}"]`);
+        if (lBtn) lBtn.click();
+      }
+      if (style) {
+        const sBtn = document.querySelector(`.tiles3 button[data-k="${style}"]`);
+        if (sBtn) sBtn.click();
+      }
+      $("#add")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      input.focus();
+    }
+    toast(`Loaded ${title} stream source into ClipCraft! Ready to clip in 9:16 vertical layout.`, "ok");
+  }, 150);
+}
+
+function drawWhop() {
+  const box = $("#whop");
+  if (!box) return;
+  const list = S.whopCampaigns || [];
+  const search = (S.whopSearch || "").toLowerCase();
+  const filter = S.whopFilter || "all";
+
+  const filtered = list.filter(c => {
+    const matchCat = filter === "all" || (c.category || "").toLowerCase().includes(filter.toLowerCase());
+    const matchTxt = !search || [c.creator, c.title, c.category, ...(c.requirements || [])].join(" ").toLowerCase().includes(search);
+    return matchCat && matchTxt;
+  });
+
+  const cats = [
+    ["all", "All Bounties"],
+    ["gta", "GTA / Gaming"],
+    ["irl", "IRL / Comedy"],
+    ["chatting", "Just Chatting"],
+    ["esports", "Esports / Ranked"]
+  ];
+
+  box.innerHTML = `
+    <div class="whop-hub">
+      <div class="whop-hero">
+        <div class="whop-hero-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="whop-badge-glow">Whop Content Rewards Hub</span>
+              <span class="pill ok">Live Payouts</span>
+            </div>
+            <h2 style="font-size:22px;font-weight:800;color:#FFFFFF;margin:0 0 6px;">Clip & Earn per 1,000 Views</h2>
+            <p style="font-size:13px;color:#9EB0C2;margin:0;max-width:700px;">
+              Select any streamer campaign to review their exact video requirements, aspect ratios, and raw material links. Click <b>⚡ Clip in Studio</b> to automatically load their VOD with optimized 9:16 layouts!
+            </p>
+          </div>
+          <div class="row" style="gap:10px;">
+            <button class="btn primary sm" data-act="whop-add">${ic("plus")}Add Custom Bounty</button>
+            <a class="btn sm" href="https://whop.com/contentrewards" target="_blank" rel="noopener">${ic("upright")}Whop Dashboard</a>
+          </div>
+        </div>
+        
+        <div class="whop-kpis">
+          <div class="whop-kpi">
+            <b>${list.length} Active</b>
+            <span>Verified Campaigns</span>
+          </div>
+          <div class="whop-kpi">
+            <b>$1.20 - $1.80</b>
+            <span>Avg. CPM (per 1K views)</span>
+          </div>
+          <div class="whop-kpi">
+            <b>$95,000+</b>
+            <span>Total Reward Pools</span>
+          </div>
+          <div class="whop-kpi">
+            <b>9:16 Vertical</b>
+            <span>Reels, TikTok, Shorts</span>
+          </div>
+        </div>
+
+        <div class="whop-filters">
+          <input type="text" class="whop-search" id="whopSearchInput" placeholder="Search by creator (Kai Cenat, GTA, Adin, Speed)..." value="${esc(S.whopSearch || "")}">
+          ${cats.map(([k, l]) => `<button class="whop-pill ${filter === k ? "on" : ""}" data-act="whop-filter" data-v="${k}">${esc(l)}</button>`).join("")}
+        </div>
+      </div>
+
+      <div class="whop-grid">
+        ${filtered.length ? filtered.map(c => `
+          <div class="whop-card">
+            <div class="whop-card-head">
+              <div class="whop-creator">
+                <div class="whop-avatar">${c.avatar ? `<img src="${esc(c.avatar)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" onerror="this.outerHTML='${esc(c.initials || "CR")}'">` : esc(c.initials || "CR")}</div>
+                <div class="whop-creator-info">
+                  <h3>${esc(c.creator)}</h3>
+                  <span>${esc(c.category)} · ${esc(c.badge || "Verified")}</span>
+                </div>
+              </div>
+              <div class="whop-rate-badge">
+                <div style="font-size:15px;font-weight:800;color:#00E5FF;">${esc(c.payout_rate)}</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Cap: ${esc(c.max_cap || "$150/clip")}</div>
+              </div>
+            </div>
+
+            <div style="font-size:14px;font-weight:700;color:#FFFFFF;line-height:1.3;">${esc(c.title)}</div>
+
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div class="whop-budget-meta">
+                <span><b>Pool:</b> ${esc(c.budget_total)}</span>
+                <span style="color:#00FF9D;">${esc(c.budget_left)}</span>
+              </div>
+              <div class="whop-budget-bar"><i style="width:${Math.max(15, Math.min(100, (c.cpm || 1) * 45))}%"></i></div>
+            </div>
+
+            <div class="whop-section">
+              <div class="whop-section-title">${ic("receipt")} Creator Requirements</div>
+              <ul class="whop-req-list">
+                ${(c.requirements || []).map(r => `<li>${esc(r)}</li>`).join("")}
+              </ul>
+            </div>
+
+            <div class="whop-specs-grid">
+              <div class="whop-spec-item">
+                <small>Preferred Ratio</small>
+                <b>${esc(c.preferred_ratio || "9:16 Vertical")}</b>
+              </div>
+              <div class="whop-spec-item">
+                <small>Recommended Layout</small>
+                <b style="color:#00E5FF;">${esc(c.recommended_layout_name || c.recommended_layout || "Gameplay + Facecam")}</b>
+              </div>
+              <div class="whop-spec-item">
+                <small>Caption Style</small>
+                <b>${esc(c.recommended_style ? c.recommended_style.toUpperCase() : "HYPE")}</b>
+              </div>
+              <div class="whop-spec-item">
+                <small>Eligible Platforms</small>
+                <div class="whop-plat-tags">
+                  ${(c.eligible_platforms || ["Reels", "TikTok", "Shorts"]).map(p => `<span class="whop-plat-tag">${esc(p)}</span>`).join("")}
+                </div>
+              </div>
+            </div>
+
+            <div class="whop-section">
+              <div class="whop-section-title">${ic("film")} Raw Material & Stream Sources</div>
+              <div class="whop-mats">
+                ${(c.materials || []).map(m => `
+                  <div class="whop-mat-row">
+                    <span class="whop-mat-name">${ic(m.platform === "Twitch" ? "video" : "play")} ${esc(m.label || m.platform)}</span>
+                    <div class="row" style="gap:6px;">
+                      <a class="btn sm ghost" href="${esc(m.url)}" target="_blank" rel="noopener" title="Open source stream">${ic("upright")}Open</a>
+                      <button class="btn sm primary" data-act="clipmat" data-url="${esc(m.url)}" data-layout="${esc(c.recommended_layout || 'crop')}" data-style="${esc(c.recommended_style || 'hype')}" data-title="${esc(c.creator)}">⚡ Clip in Studio</button>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+
+            <div class="whop-actions">
+              <a class="btn ghost sm" href="${esc(c.whop_url || 'https://whop.com/contentrewards')}" target="_blank" rel="noopener" style="flex:1;text-align:center;">${ic("upright")}Submit on Whop</a>
+              <button class="btn sm danger ghost" data-act="whop-del" data-id="${esc(c.id)}" title="Delete bounty">${ic("trash")}</button>
+            </div>
+          </div>
+        `).join("") : `
+          <div class="empty" style="grid-column: 1 / -1; padding: 40px 20px;">
+            <h3>No campaigns found matching "${esc(search)}"</h3>
+            <p>Try searching for Kai Cenat, GTA, Speed, or reset your filters.</p>
+            <button class="btn primary sm" data-act="whop-filter" data-v="all">Show All Campaigns</button>
+          </div>
+        `}
+      </div>
+    </div>
+  `;
+
+  const sin = $("#whopSearchInput");
+  if (sin) {
+    sin.oninput = e => {
+      S.whopSearch = e.target.value;
+      drawWhop();
+      const nIn = $("#whopSearchInput");
+      if (nIn) { nIn.focus(); nIn.setSelectionRange(nIn.value.length, nIn.value.length); }
+    };
+  }
+}
+
 /* ============================================================ AI usage */
 async function loadUsage() {
   try { S.usage = await api("/api/usage"); } catch { return; }
@@ -2363,6 +2616,99 @@ document.addEventListener("click", async e => {
   if (b.tagName === "A") e.preventDefault();
   try {
     if (a === "go") { closePops(); return go(d.v, d.tab); }
+    if (a === "whop-filter") {
+      S.whopFilter = d.v;
+      drawWhop();
+      return;
+    }
+    if (a === "clipmat") {
+      clipFromWhop(d.url, d.layout, d.style, d.title);
+      return;
+    }
+    if (a === "whop-del") {
+      if (!confirm("Are you sure you want to remove this campaign?")) return;
+      try {
+        const res = await send("/api/whop/campaigns/" + encodeURIComponent(d.id), {}, "DELETE");
+        S.whopCampaigns = res.campaigns || [];
+        drawWhop();
+        toast("Campaign removed", "ok");
+      } catch (err) { toast(err.message, "bad"); }
+      return;
+    }
+    if (a === "whop-add") {
+      const dlg = $("#formdlg");
+      dlg.innerHTML = `<form method="dialog" class="dlg" style="max-width:540px;">
+        <h2>Add Custom Whop / Clipping Bounty</h2>
+        <p class="help">Save a creator campaign, custom payout rate, requirements, and raw stream sources.</p>
+        <label class="f">Creator Name<input id="wc_creator" placeholder="e.g. Kai Cenat, Tarik, NoPixel Streamer" required autofocus></label>
+        <label class="f">Campaign Title<input id="wc_title" placeholder="e.g. GTA 6 Heist Moments & Reactions" required></label>
+        <div class="row" style="gap:10px;">
+          <label class="f" style="flex:1;">Category
+            <select id="wc_cat">
+              <option value="GTA / Gaming">GTA / Gaming</option>
+              <option value="IRL / Comedy">IRL / Comedy</option>
+              <option value="Just Chatting">Just Chatting</option>
+              <option value="Esports / Ranked">Esports / Ranked</option>
+            </select>
+          </label>
+          <label class="f" style="flex:1;">Payout Rate<input id="wc_rate" placeholder="e.g. $1.50 / 1K views" value="$1.50 / 1K views" required></label>
+        </div>
+        <div class="row" style="gap:10px;">
+          <label class="f" style="flex:1;">Preferred Layout
+            <select id="wc_layout">
+              <option value="gameplay">Gameplay + Corner Facecam</option>
+              <option value="crop">Fill Screen (Centre Crop)</option>
+              <option value="split">Split Screen (2 People)</option>
+              <option value="zoom">Zoomed In + Blur Fill</option>
+            </select>
+          </label>
+          <label class="f" style="flex:1;">Budget Pool<input id="wc_budget" placeholder="e.g. $10,000" value="$10,000"></label>
+        </div>
+        <label class="f">Raw Material / Stream URL (YouTube, Twitch, Kick)<input id="wc_url" placeholder="https://www.youtube.com/@channel/streams or https://twitch.tv/name" required></label>
+        <label class="f">Creator Requirements (one per line)
+          <textarea id="wc_reqs" rows="3" placeholder="Must be 30s-60s with dynamic captions&#10;Tag creator in description&#10;No copyrighted music">Must be 30s to 75s with captions&#10;Tag creator in caption&#10;High engagement opening hook</textarea>
+        </label>
+        <div class="dlg-foot">
+          <button class="btn" value="no" formnovalidate>Cancel</button>
+          <button class="btn primary" value="yes">Save Bounty</button>
+        </div>
+      </form>`;
+      dlg.onclose = async () => {
+        if (dlg.returnValue !== "yes") return;
+        try {
+          const reqs = ($("#wc_reqs").value || "").split("\n").map(x => x.trim()).filter(Boolean);
+          const newCamp = {
+            creator: $("#wc_creator").value.trim(),
+            title: $("#wc_title").value.trim(),
+            category: $("#wc_cat").value,
+            payout_rate: $("#wc_rate").value.trim() || "$1.50 / 1K views",
+            cpm: parseFloat($("#wc_rate").value.replace(/[^0-9.]/g, "")) || 1.5,
+            budget_total: $("#wc_budget").value.trim() || "$10,000",
+            budget_left: $("#wc_budget").value.trim() || "$10,000",
+            preferred_ratio: "9:16 Vertical (1080x1920)",
+            recommended_layout: $("#wc_layout").value,
+            recommended_layout_name: $("#wc_layout").options[$("#wc_layout").selectedIndex].text,
+            recommended_style: "hype",
+            eligible_platforms: ["Instagram Reels", "TikTok", "YouTube Shorts"],
+            requirements: reqs.length ? reqs : ["9:16 vertical video", "Dynamic captions included"],
+            materials: [
+              {
+                platform: /twitch/i.test($("#wc_url").value) ? "Twitch" : /kick/i.test($("#wc_url").value) ? "Kick" : "YouTube",
+                label: "Stream Source",
+                url: $("#wc_url").value.trim()
+              }
+            ],
+            whop_url: "https://whop.com/contentrewards"
+          };
+          const res = await send("/api/whop/campaigns", newCamp, "POST");
+          S.whopCampaigns = res.campaigns || [];
+          drawWhop();
+          toast("Custom bounty added!", "ok");
+        } catch (err) { toast(err.message, "bad"); }
+      };
+      dlg.showModal();
+      return;
+    }
     if (a === "aimodels") {
       b.disabled = true;
       try {

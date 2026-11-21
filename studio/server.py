@@ -620,6 +620,25 @@ def _speech_brief() -> dict:
     return {k: {"label": m[0], "size_mb": m[3], "state": fetch_model.status(k)} for k, m in fetch_model.MODELS.items()}
 
 
+# ================================================================ Whop Campaigns
+@app.get("/api/whop/campaigns")
+def whop_campaigns(request: Request):
+    from . import whop
+    return {"campaigns": whop.load_campaigns()}
+
+
+@app.post("/api/whop/campaigns")
+def whop_add_campaign(request: Request, body: dict = Body(...)):
+    from . import whop
+    return {"campaigns": whop.add_or_update_campaign(body)}
+
+
+@app.delete("/api/whop/campaigns/{cid}")
+def whop_delete_campaign(request: Request, cid: str):
+    from . import whop
+    return {"campaigns": whop.delete_campaign(cid)}
+
+
 # ================================================================ videos
 def _job_or_404(jid: str):
     job = jobs.get(jid) if re.fullmatch(r"[\w\-]{8,60}", jid) else None
