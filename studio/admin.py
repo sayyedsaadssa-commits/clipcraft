@@ -35,7 +35,7 @@ def _log(c, admin_id: str, action: str, target_id: str = None, detail: str = "")
 
 # ---------------------------------------------------------------- the dashboard
 def overview() -> dict:
-    from . import ai, auth, jobs, live, load, mailer, transcribe
+    from . import ai, auth, fetch_model, jobs, live, load, mailer, transcribe
     now = time.time()
     midnight = time.mktime(time.localtime(now)[:3] + (0, 0, 0, 0, 0, -1))
     d7, d30 = now - 7 * 86400, now - 30 * 86400
@@ -90,7 +90,9 @@ def overview() -> dict:
                    "videos": len(all_jobs), "clips": sum(clips.values()), "recording": len(live.active()),
                    "working": sum(1 for j in all_jobs if j["status"] in ("queued", "running"))},
         "daily": list(daily.values()), "by_purpose": by_purpose, "users": users, "log": log,
-        "server": {"speech_model": transcribe.model_ready(), "ai_key": ai.ready(), "ai_provider": ai.label(),
+        "server": {"speech_model": transcribe.model_ready(),
+                   "speech_more": {m[0]: fetch_model.ready(k) for k, m in fetch_model.MODELS.items() if k != fetch_model.DEFAULT},
+                   "ai_key": ai.ready(), "ai_provider": ai.label(),
                    "ai_model": (ai.models() or [""])[0], "google": auth.google_ready(), "mail": mailer.ready(),
                    "free_gb": round(shutil.disk_usage(config.DATA_DIR).free / 1e9, 1),
                    "load": load.state(), "running": jobs.running_now(), "waiting": jobs.waiting_total(),

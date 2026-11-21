@@ -220,6 +220,7 @@ img.avatar.ring{background:transparent}
 :where(input:not([type=checkbox],[type=radio],[type=file],[type=range]),select,textarea):focus{background:#0F1623;border-color:var(--brand);color:#FFFFFF}
 input:not([type=checkbox],[type=radio],[type=range]):focus-visible,select:focus-visible,textarea:focus-visible{outline:none}
 input::placeholder,textarea::placeholder{color:var(--faint)}
+textarea{height:auto;padding:10px 12px;resize:vertical}
 label.f{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--dim);font-weight:600}
 label.sw{display:flex;align-items:center;gap:12px;cursor:pointer;color:var(--text);font-weight:600}
 label.sw input{appearance:none;width:38px;height:22px;border-radius:999px;background:#DCD2D0;position:relative;cursor:pointer;flex:none;margin:0}
@@ -393,7 +394,12 @@ img.av{object-fit:cover}
 .lay-prev .ph::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,#B4643A,#5E3A2A);filter:blur(3px);opacity:.75}
 .lay-prev .ph i{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:16px;background:linear-gradient(135deg,#FF8B33,#FFB27A)}
 .lay-prev.zoom .ph i{left:-6px;right:-6px;height:24px}
-.lay-prev.crop .ph i{left:0;right:0;top:0;height:100%;transform:none}
+.lay-prev.crop .ph i,.lay-prev.left .ph i,.lay-prev.right .ph i,.lay-prev.gameplay .ph i{left:0;right:0;top:0;height:100%;transform:none}
+.lay-prev.left .ph i{background:linear-gradient(90deg,#FFB27A,#FF8B33 45%,#5E3A2A)}
+.lay-prev.right .ph i{background:linear-gradient(270deg,#FFB27A,#FF8B33 45%,#5E3A2A)}
+.lay-prev.fit .ph{background:#000}.lay-prev.fit .ph::before{display:none}
+.lay-prev.split .ph i{top:0;height:23px;transform:none}
+.lay-prev.split .ph::before{inset:25px 0 0 0;filter:none;opacity:1;background:linear-gradient(135deg,#FFB27A,#FF8B33)}
 .seg{display:flex;gap:4px;background:#141C2B;border:1px solid var(--line);border-radius:10px;padding:4px}
 .composer.compact .seg{background:var(--muted)}
 .seg button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 6px;border:0;border-radius:7px;background:transparent;color:var(--dim);font-size:13px;font-weight:600;cursor:pointer;transition:background-color .15s ease,color .15s ease}
@@ -471,6 +477,9 @@ img.av{object-fit:cover}
 .appact{flex:none}
 .appcard{flex-wrap:wrap}
 .stor-path{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.speech-list{display:flex;flex-direction:column;gap:10px}
+.speech-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r)}
+.speech-info{flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:2px}.speech-info .bar{max-width:320px}
 .stor-path code{flex:1 1 260px;min-width:0;overflow-wrap:anywhere;font-size:13px;background:var(--muted);border-radius:8px;padding:10px 12px}
 .stor-bar{height:10px;border-radius:999px;background:var(--muted);overflow:hidden;margin:14px 0 6px}
 .stor-bar i{display:block;height:100%;background:var(--brand);border-radius:999px}
@@ -1385,11 +1394,16 @@ function drawAdd(variant) {
       <button class="btn primary" id="goBtn">${ic("scissors")}Make clips</button>
     </div>
     <div class="composer-opts" inert><div class="og">
+      ${langSeg(c?.lang || "en")}
       <div class="ob wide"><div class="ot">Clips</div><div class="nsteps">
         ${stepper("o_max", "How many", c?.max_clips ?? 6, 1, 20, 1, "")}
         ${stepper("o_min", "Shortest", c?.min_len ?? 15, 5, 120, 5, "s")}
         ${stepper("o_maxlen", "Longest", c?.max_len ?? 60, 10, 180, 5, "s")}
       </div></div>
+      <div class="ob wide"><label class="f"><span class="ot" style="margin:0">Big text on every clip <span style="font-weight:400">(optional)</span></span>
+        <input id="o_hook" maxlength="60" autocomplete="off" value="${esc(c?.hook_text || "")}" placeholder="Left empty, the AI writes a different one for each clip" aria-label="Big text on every clip"></label></div>
+      <div class="ob wide"><label class="f"><span class="ot" style="margin:0">Description for every clip <span style="font-weight:400">(optional)</span></span>
+        <textarea id="o_desc" rows="3" maxlength="2000" placeholder="Left empty, the AI writes a different one for each clip. Write it once here and it is the description of every clip, exactly as typed." aria-label="Description for every clip">${esc(c?.description_text || "")}</textarea></label></div>
       <div class="ob"><div class="ot cap-head"><span id="o_style_label">Caption style</span>
         <label><input type="checkbox" id="o_captions" data-caption-toggle ${c?.captions === false ? "" : "checked"}>Generate captions</label></div>
         ${choice("o_style", Object.entries(S.status.styles).map(([k, v]) => ({v:k, label:v, prev:capPrev(k)})), c?.style ?? "bounce", c?.captions === false)}</div>
@@ -1403,7 +1417,22 @@ function drawAdd(variant) {
     </div></div></form>`;
   drawAtt();
 }
-const LAYOUT_SHORT = {blur:"Blurred fill", zoom:"Zoomed in", crop:"Fill screen"};
+const LAYOUT_SHORT = {blur:"Blurred fill", zoom:"Zoomed in", crop:"Fill screen", left:"Keep left", right:"Keep right", fit:"Black bars", split:"Split screen", gameplay:"Gameplay + facecam"};
+/* The language spoken in the video picks which speech model writes the transcript. Languages other than English
+   need their model downloaded once (Settings → Speech models). */
+const LANG_NATIVE = {ar:"العربية"};
+const speechLangs = () => S.status.speech || {en:{label:"English", state:"ready", size_mb:0}};
+const langName = k => { const m = speechLangs()[k]; return m ? m.label + (LANG_NATIVE[k] ? " · " + LANG_NATIVE[k] : "") : k; };
+function langSeg(val) {
+  const L = speechLangs(); if (!L[val]) val = "en";
+  return `<div class="ob"><div class="ot">Spoken language</div><input type="hidden" id="o_lang" value="${esc(val)}"><div class="seg" role="group" aria-label="Spoken language">${Object.entries(L).map(([k, m]) =>
+    `<button type="button" data-seg="o_lang" data-v="${esc(k)}" aria-pressed="${k === val}">${esc(langName(k))}<small>${k === "en" ? "Default" : m.state === "ready" ? "Ready" : m.state === "downloading" ? "Downloading" : `Adds ${esc(m.size_mb)} MB once`}</small></button>`).join("")}</div></div>`;
+}
+function setLang(v) {   // when the creator is changed in the add bar, their language comes with them
+  const i = $("#o_lang"); if (!i || !speechLangs()[v]) return;
+  i.value = v; i.parentElement.querySelectorAll("[data-seg]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+}
+document.addEventListener("change", e => { if (e.target.id === "o_creator") setLang(S.creators.find(x => x.id === e.target.value)?.lang || "en"); });
 const CAP_LOOK = {bounce:{font:"'Archivo Black'", hl:"#FFFF00", up:true}, hype:{font:"Anton", hl:"#FF3C3C", up:true}, clean:{font:"Poppins", hl:"#6BD7FF", up:false, w:800}};
 function capPrev(k) {
   const s = CAP_LOOK[k] || {font:"inherit", hl:"#FF8B33", up:true};
@@ -1459,7 +1488,8 @@ document.addEventListener("keydown", e => {
 const targetCreator = () => creatorId() || $("#o_creator")?.value || "";
 function jobOptions() {
   const n = id => { const v = $(id).value; return v === "" ? null : Number(v); };
-  const o = {max_clips:n("#o_max"), min_len:n("#o_min"), max_len:n("#o_maxlen"), captions:$("#o_captions").checked, style:$("#o_style").value, layout:$("#o_layout").value, quality:n("#o_quality")};
+  const o = {max_clips:n("#o_max"), min_len:n("#o_min"), max_len:n("#o_maxlen"), captions:$("#o_captions").checked, style:$("#o_style").value, layout:$("#o_layout").value, quality:n("#o_quality"),
+    hook_text:$("#o_hook").value.trim(), description_text:$("#o_desc").value.trim(), lang:$("#o_lang")?.value || "en"};
   if (n("#o_from") !== null) o.range_start = n("#o_from") * 60;
   if (n("#o_to") !== null) o.range_end = n("#o_to") * 60;
   return o;
@@ -1643,6 +1673,17 @@ function sendFile(f, who, options) {
     x.send(fd);
   });
 }
+function langNote(A, lang) {
+  const sp = speechLangs()[lang], admin = S.status.user?.is_admin;
+  const onlyYT = !A.files.length && A.links.length && A.links.every(l => /youtu\.?be/i.test(l.url));
+  $("#langnote")?.remove();
+  $("#addform .composer-bar").insertAdjacentHTML("afterend", `<div class="note" id="langnote" style="margin:12px 0 0">${ic("down")}<span>
+    <b>${esc(sp.label)} needs its speech model first.</b> ${admin ? `It's about ${esc(sp.size_mb)} MB and is downloaded once. Your videos start as soon as it's here.` : `Ask your admin to add ${esc(sp.label)} in Settings → Speech models.`}
+    ${onlyYT ? `<br><span class="sub">YouTube videos with their own ${esc(sp.label)} captions also work without it.</span>` : ""}
+    <span class="row" style="margin-top:10px">${admin ? `<button type="button" class="btn sm primary" data-act="langdl" data-v="${esc(lang)}">Download and make clips</button>` : ""}
+    ${onlyYT ? `<button type="button" class="btn sm" data-act="langgo" data-v="${esc(lang)}">Make clips with YouTube's captions</button>` : ""}
+    <button type="button" class="btn sm ghost" data-act="langno">Cancel</button></span></span></div>`);
+}
 async function makeClips() {
   const A = att();
   if (A.busy) return;
@@ -1658,6 +1699,9 @@ async function makeClips() {
     $("#url")?.focus();
     return;
   }
+  const lang = $("#o_lang")?.value || "en", sp = speechLangs()[lang];
+  if (sp && sp.state === "missing" && A.langOk !== lang) return langNote(A, lang);
+  $("#langnote")?.remove();
   A.busy = true; drawAtt();
   let started = 0, failed = 0;
   const who = targetCreator(), opts = jobOptions();
@@ -1858,7 +1902,8 @@ function drawCreatorForm() {
   const A = S.accounts;
   box.innerHTML = `<div class="card"><h2>Their stream</h2><p class="help">Where to record from, and whether to start by itself.</p>
       <div class="chans">${channelRows(c)}</div>
-      <div class="fields" style="margin-top:14px"><label class="sw span"><input type="checkbox" data-k="auto_watch" ${c.auto_watch ? "checked" : ""}><span>Record automatically when they go live<small>Checks straight away, then every two minutes.</small></span></label></div></div>
+      <div class="fields" style="margin-top:14px"><label class="sw span"><input type="checkbox" data-k="auto_watch" ${c.auto_watch ? "checked" : ""}><span>Record automatically when they go live<small>Checks straight away, then every two minutes.</small></span></label>
+        <label class="f">Language they speak<select data-k="lang">${opts(Object.fromEntries(Object.keys(speechLangs()).map(k => [k, langName(k)])), c.lang || "en")}</select><small class="sub" style="font-weight:400">Used for live recordings and as the choice for their videos.${(c.lang && c.lang !== "en" && speechLangs()[c.lang]?.state !== "ready") ? " Its speech model isn't added yet: see Settings → Speech models." : ""}</small></label></div></div>
     <div class="card"><h2>How the AI decides</h2><p class="help">Two separate AI checks. The words judge reads only what was said. The reaction judge sees only how loud the streamer got and how busy chat was, never the words.</p>
       <div class="fields">
         <label class="f">Check the live stream every<select data-k="ai_every_min">${opts({1:"1 minute", 2:"2 minutes", 3:"3 minutes", 5:"5 minutes", 10:"10 minutes"}, c.ai_every_min || 3)}</select><small class="sub" id="costhint" style="font-weight:400">${costHint(c.ai_every_min)}</small></label>
@@ -1874,9 +1919,12 @@ function drawCreatorForm() {
       <div class="fields"><label class="sw span"><input type="checkbox" data-k="captions" data-caption-toggle ${c.captions === false ? "" : "checked"}>Generate captions</label>
         <label class="f">Caption style<select data-k="style" data-caption-style ${c.captions === false ? "disabled" : ""}>${opts(S.status.styles, c.style)}</select></label>
         <label class="f">Layout<select data-k="layout">${opts(S.status.layouts, c.layout)}</select></label>
+        <label class="f">Game<input data-k="game" value="${esc(c.game || "")}" placeholder="Read from the title"><small class="sub" style="font-weight:400">Left empty, the game is read from the stream's title. Set it for a streamer whose title says nothing: GTA 6, Fortnite, Elden Ring.</small></label>
         <label class="f">Shortest clip (seconds)<input data-k="min_len" type="number" value="${c.min_len}"></label>
         <label class="f">Longest clip (seconds)<input data-k="max_len" type="number" value="${c.max_len}"></label>
         <label class="f">Clips per video<input data-k="max_clips" type="number" value="${c.max_clips}"></label>
+        <label class="f span">Big text on every clip<input data-k="hook_text" maxlength="60" value="${esc(c.hook_text || "")}" placeholder="Left empty, the AI writes a different one for each clip"><small class="sub" style="font-weight:400">For a campaign that asks for a set line on every clip. It is shown exactly as typed.</small></label>
+        <label class="f span">Description for every clip<textarea data-k="description_text" rows="3" maxlength="2000" placeholder="Left empty, the AI writes a different one for each clip">${esc(c.description_text || "")}</textarea><small class="sub" style="font-weight:400">Written once, used as the description of every clip of this creator, exactly as typed. It is posted as it is, without the AI's hashtags.</small></label>
         <label class="f">Minutes of live stream to keep<input data-k="buffer_min" type="number" value="${c.buffer_min}"></label></div></div>
     <div class="card"><h2>Posting</h2><p class="help">${A.length ? "Choose the accounts this creator's clips go to. One account can be shared by several creators." : "No accounts are connected yet. Connect one in Settings, then come back."}</p>
       ${A.length ? `<div class="row" style="margin-bottom:16px">${A.map(a => `<label class="ck"><input type="checkbox" data-acc value="${esc(a.id)}" ${c.accounts.includes(a.id) ? "checked" : ""}>${esc(a.label)} · ${esc(a.name)}</label>`).join("")}</div>` : `<button class="btn" data-act="go" data-v="settings" style="margin-bottom:16px">${ic("cog")}Open Settings</button>`}
@@ -2017,7 +2065,8 @@ const setTabs = () => [
   ...(S.status.accounts === false ? [] : [["profile", "Profile", "user", "Your name, email and how you sign in"],
                                           ["security", "Security", "lock", "Password and signing out"]]),
   ["apps", "Connected apps", "plug", "Where your clips get posted"],
-  ...(S.status.user?.is_admin ? [["storage", "Storage", "folder", "Where videos and clips are kept"]] : [])];
+  ...(S.status.user?.is_admin ? [["speech", "Speech models", "chat", "The languages PeakCut can hear"],
+                                 ["storage", "Storage", "folder", "Where videos and clips are kept"]] : [])];
 function aiHints() {
   const k = S.ai, sel = $("#ai_provider"); if (!k || !sel) return;
   const pv = k.providers.find(x => x.id === sel.value) || k.providers[0], same = pv.id === k.provider;
@@ -2048,6 +2097,18 @@ async function drawSettings() {
           </div>
           <div class="row" style="margin-top:20px"><button class="btn primary" data-act="aisave">Save and test</button>${k.ready ? `<button class="btn" data-act="aitest">Test again</button>` : ""}</div></section>`;
       aiHints();
+    }
+    if (tab === "speech") {
+      const r = await api("/api/speech");
+      body.innerHTML = `<section class="set-sec"><h2>Speech models</h2><p class="help">PeakCut writes down what is said in a video with a speech model that runs on this computer, one per language. English is always here. Add another language to clip videos spoken in it, then choose that language when adding a video, or on a creator's Setup.</p>
+        <div class="speech-list">${r.models.map(m => `<div class="speech-row"><div class="speech-info"><b>${esc(langName(m.lang))}</b><span class="sub">${esc(m.size_mb)} MB · ${esc(m.credit)}</span>
+            ${m.state === "downloading" ? `<div class="bar"><i style="width:${m.percent}%"></i></div>` : ""}${m.error && m.state === "missing" ? `<span class="sub" style="color:var(--bad)">The last download failed. Check the internet connection and try again.</span>` : ""}</div>
+          <div class="row">${m.state === "ready" ? `<span class="pill ok">${ic("check")}Ready</span>${m.default ? "" : `<button class="btn sm ghost" data-act="speechdel" data-v="${esc(m.lang)}">${ic("trash")}Remove</button>`}`
+            : m.state === "downloading" ? `<span class="pill">Downloading ${esc(m.percent)}%</span>`
+            : `<button class="btn sm" data-act="speechget" data-v="${esc(m.lang)}">${ic("down")}Download</button>`}</div></div>`).join("")}</div></section>`;
+      clearTimeout(S.speechTimer);
+      if (r.models.some(m => m.state === "downloading")) S.speechTimer = setTimeout(() => { if (S.stab === "speech" && $("#sform")) drawSettings(); }, 1500);
+      else if (S.speechTimer) { S.speechTimer = null; S.status = await api("/api/status"); }
     }
     if (tab === "profile") {
       const joined = me.created_at ? new Date(me.created_at * 1000).toLocaleDateString([], {day: "numeric", month: "long", year: "numeric"}) : "";
@@ -2134,9 +2195,27 @@ async function drawSettings() {
           ${card("youtube", "YouTube", yt, "#FF0000", "Post clips to your channel as Shorts.")}
           ${card("instagram", "Instagram", ig, "linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)", "Post clips as Reels. Needs a Creator or Business account.")}
           ${card("tiktok", "TikTok", tt, "#000", "Post clips straight to your TikTok.")}
-        </div></section>`;
+        </div></section>${admin ? await ytCookiesCard(yt) : ""}`;
     }
   } catch (e) { body.innerHTML = `<div class="set-load">${esc(e.message)}</div>`; }
+}
+async function ytCookiesCard(logo) {
+  const st = await api("/api/youtube-cookies").catch(() => null);
+  if (!st) return "";
+  const open = S.setupOpen === "ytdl";
+  const act = `<button class="btn sm ${st.saved ? "ghost" : "primary"}" data-act="appsetup" data-p="ytdl">${ic("cog")}${st.saved ? "Replace" : "Add cookies"}</button>`
+    + (st.saved ? `<button class="btn sm ghost" data-act="ytcookies" data-remove="1">Remove</button>` : "");
+  const panel = open ? `<div class="appsetup">
+      <p class="sub">YouTube refuses many servers with "Sign in to confirm you're not a bot". Cookies from a signed-in YouTube account get past it. Use a spare Google account, not your main one.</p>
+      <ol><li>In a private browser window, sign in to YouTube with that account.</li>
+        <li>With an extension such as <b>Get cookies.txt LOCALLY</b>, export the cookies for youtube.com.</li>
+        <li>Paste the whole file below and save. Then close that private window without signing out.</li></ol>
+      <label class="f">cookies.txt<textarea id="ytc" rows="6" spellcheck="false" autocomplete="off" placeholder="# Netscape HTTP Cookie File"></textarea></label>
+      <div class="row"><button class="btn primary" data-act="ytcookies">Save</button><button class="btn ghost" data-act="appsetup" data-p="">Close</button></div></div>` : "";
+  return `<section class="set-sec"><h2>YouTube links</h2><p class="help">Only needed when YouTube links (videos or lives) fail with "YouTube isn't letting PeakCut download".</p>
+    <div class="apps"><div class="appcard"><span class="applogo" style="background:#FF0000">${logo}</span>
+    <div class="apptx"><b>YouTube cookies</b><span>${st.saved ? `Saved ${new Date(st.updated * 1000).toLocaleString()}. Used for every YouTube link.` : "None saved."}</span></div>
+    <div class="appact">${act}</div>${panel}</div></div></section>`;
 }
 async function saveSettings() { const d = {}; $$("#sform [data-s]").forEach(i => d[i.dataset.s] = i.value); await send("/api/settings", d, "PUT"); }
 
@@ -2161,9 +2240,11 @@ function drawClipDlg(full) {
           <label class="f">Layout<select data-f="layout">${opts(S.status.layouts, c.layout)}</select></label></div>
         <div class="two"><label class="f">Start (seconds)<input data-f="start" type="number" step="0.5" value="${c.start}"></label>
           <label class="f">End (seconds)<input data-f="end" type="number" step="0.5" value="${c.end}"></label></div>
-        <h3>Post text</h3>
+        <div class="row" style="justify-content:space-between;align-items:center"><h3>Post text</h3>
+          <button class="btn sm" data-act="writetext">Write again with AI</button></div>
         <label class="f">Title<input data-f="title" value="${esc(c.title)}"></label>
         <label class="f">Description<textarea data-f="description" rows="2">${esc(c.description)}</textarea></label>
+        <label class="f">Hashtags<input data-f="hashtags" value="${esc((c.hashtags || []).join(" "))}" placeholder="funny gaming clutch"></label>
         <button class="btn" data-act="remake">${ic("scissors")}Save and re-make clip</button>
         <h3>Post it</h3>
         <div id="dposts" class="row" style="gap:4px"></div>
@@ -2177,6 +2258,10 @@ function drawClipDlg(full) {
   } else if (D.sig !== sig) $("#stage").innerHTML = stage;
   D.sig = sig;
   put($("#dposts"), postPills(c));
+}
+function postText() {   // the post text as it is in the clip editor right now
+  const v = k => $(`#clipdlg [data-f="${k}"]`).value;
+  return {title: v("title"), description: v("description"), hashtags: v("hashtags").split(/\s+/).map(h => h.replace(/^#+/, "")).filter(Boolean)};
 }
 $("#clipdlg").addEventListener("close", () => { $("#clipdlg").innerHTML = ""; D.jid = null; });
 $("#clipdlg").addEventListener("click", e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
@@ -2242,8 +2327,11 @@ document.addEventListener("change", async e => {
   if (t.id === "o_creator") {
     const toggle = $("#o_captions"), c = S.creators.find(c => c.id === t.value);
     if (!toggle.dataset.overridden) { toggle.checked = c?.captions !== false; syncCaptionStyle(toggle); }
+    const hk = $("#o_hook"); if (hk && !hk.dataset.typed) hk.value = c?.hook_text || "";      // the creator's own text, unless one was typed here
+    const ds = $("#o_desc"); if (ds && !ds.dataset.typed) ds.value = c?.description_text || "";
     return;
   }
+  if (t.id === "o_hook" || t.id === "o_desc") t.dataset.typed = "1";
   if (t.hasAttribute("data-caption-toggle")) {
     if (t.id === "o_captions") t.dataset.overridden = "true";
     syncCaptionStyle(t);
@@ -2297,6 +2385,21 @@ document.addEventListener("click", async e => {
       } finally { b.disabled = false; }
       return;
     }
+    if (a === "speechget" || a === "speechdel") {
+      if (a === "speechdel" && !await ask(`Remove the ${langName(d.v)} speech model?`, "Videos in that language can't be clipped until it's downloaded again. Clips already made stay.", "Remove", true)) return;
+      b.disabled = true;
+      try { await send("/api/speech/" + encodeURIComponent(d.v), {}, a === "speechget" ? "POST" : "DELETE"); }
+      finally { S.status = await api("/api/status"); await drawSettings(); }
+      return;
+    }
+    if (a === "langdl" || a === "langgo") {
+      const A = att();
+      if (a === "langdl") { b.disabled = true; await send("/api/speech/" + encodeURIComponent(d.v), {}); S.status = await api("/api/status"); }
+      A.langOk = d.v; $("#langnote")?.remove();
+      try { await makeClips(); } finally { A.langOk = null; }
+      return;
+    }
+    if (a === "langno") return $("#langnote")?.remove();
     if (a === "menu") return $("#app").classList.toggle("open");
     if (a === "collapse") { const m = $("#app").classList.toggle("mini"); try { localStorage.setItem("mini", m ? "1" : ""); } catch {} return; }
     if (a === "toggleopts") { const p = $(".composer-opts"), open = !p.classList.contains("open"); p.classList.toggle("open", open); p.inert = !open; b.classList.toggle("on", open); b.setAttribute("aria-expanded", String(open)); return; }
@@ -2341,8 +2444,11 @@ document.addEventListener("click", async e => {
       dlg.returnValue = "no"; return dlg.showModal();
     }
     if (a === "copy") {
-      const c = jobOf(d.j).clips.find(x => x.id === d.c);
-      await navigator.clipboard.writeText(`${c.title}\n\n${c.description}\n\n${(c.hashtags || []).map(h => "#" + h).join(" ")}`); return toast("Post text copied", "ok");
+      const saved = jobOf(d.j).clips.find(x => x.id === d.c);
+      const c = b.closest("#clipdlg") ? postText() : saved;   // in the editor: what is in the boxes
+      // A description the person wrote is copied as written; otherwise only the tags it does not already end with are added.
+      const tags = saved.fixed_description ? "" : (c.hashtags || []).filter(h => !(c.description || "").includes("#" + h)).map(h => "#" + h).join(" ");
+      await navigator.clipboard.writeText([c.title, c.description, tags].filter(Boolean).join("\n\n")); return toast("Post text copied", "ok");
     }
     if (a === "logout") { await api("/api/auth/logout", {method:"POST"}); location.href = "/"; return; }
     if (a === "pwsave") {
@@ -2447,6 +2553,10 @@ document.addEventListener("click", async e => {
     if (a === "storcancel") { await send("/api/storage", {cancel: true}, "PUT"); toast("Kept the current folder", "ok"); return drawSettings(); }
     if (a === "appsetup") { S.setupOpen = d.p && S.setupOpen !== d.p ? d.p : ""; return drawSettings(); }
     if (a === "copytext") { await navigator.clipboard.writeText(d.t); return toast("Copied", "ok"); }
+    if (a === "ytcookies") {
+      await send("/api/youtube-cookies", d.remove ? {remove: true} : {text: $("#ytc").value}, "PUT");
+      S.setupOpen = ""; toast(d.remove ? "YouTube cookies removed." : "Saved. YouTube links will use them now.", "ok"); return drawSettings();
+    }
     if (a === "appsave") {
       await send("/api/apps", {platform: d.p, client_id: $("#app_id").value, client_secret: $("#app_secret").value}, "PUT");
       S.setupOpen = ""; S.status = await api("/api/status"); toast("Saved. People can connect now.", "ok"); return drawSettings();
@@ -2477,10 +2587,20 @@ document.addEventListener("click", async e => {
       });
       await send(`/api/jobs/${D.jid}/clips/${D.cid}/render`, body); toast("Re-making the clip…", "ok"); return tick();
     }
+    if (a === "writetext") {
+      b.disabled = true; const was = b.textContent; b.textContent = "Writing…";
+      try {
+        const t = await send(`/api/jobs/${D.jid}/clips/${D.cid}/write`, {});
+        const f = k => $(`#clipdlg [data-f="${k}"]`);
+        f("title").value = t.title; f("description").value = t.description; f("hashtags").value = (t.hashtags || []).join(" ");
+        return toast("New post text written. Read it over: it is saved when you post.", "ok");
+      } finally { b.disabled = false; b.textContent = was; }
+    }
     if (a === "postnow" || a === "postqueue") {
       const accs = $$("#clipdlg [data-pacc]:checked").map(i => i.value);
       if (!accs.length) return toast("Tick at least one account first.", "bad");
       if (a === "postnow" && !await ask("Post now?", `This clip goes to ${accs.length} account${accs.length > 1 ? "s" : ""} straight away.`, "Post now")) return;
+      await send(`/api/jobs/${D.jid}/clips/${D.cid}/text`, postText(), "PUT");   // the text as it is in the boxes now
       await send("/api/posts", {job:D.jid, clip:D.cid, accounts:accs, now:a === "postnow"});
       toast(a === "postnow" ? "Posting now" : "Added to the queue", "ok"); return tick();
     }
