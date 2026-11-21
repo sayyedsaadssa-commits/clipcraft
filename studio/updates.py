@@ -78,6 +78,17 @@ def _what_changed(here: str):
     return int(d.get("ahead_by") or 0), notes[:20]
 
 
+def _is_merged(top: str) -> bool:
+    if not top:
+        return True
+    try:
+        import subprocess
+        res = subprocess.run(["git", "merge-base", "--is-ancestor", top, "HEAD"], cwd=config.ROOT, capture_output=True)
+        return res.returncode == 0
+    except Exception:
+        return False
+
+
 def check(force: bool = False):
     """Look once. Returns what the dashboard should say, or None when this copy is up to date (or it cannot be told)."""
     if not ON:
@@ -92,7 +103,7 @@ def check(force: bool = False):
             top = newest() if here else ""
         except Exception:  # noqa: BLE001 - offline: what was known stays, and it is asked again in a minute
             return _state["result"]
-        if not top or top == here:
+        if not top or top == here or _is_merged(top):
             _state.update(result=None, seen=top)
             return None
         if top != _state["seen"] or _state["notes"] is None:      # a commit not seen before: ask what it brought, once
